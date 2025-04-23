@@ -1,0 +1,247 @@
+/* ===================== GLOBAL ===================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+a {
+  color: #800066;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+/* ===================== LOGIN PAGE ===================== */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url("/images/BG.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-box img.logo {
+  width: 120px;
+  margin-bottom: 1rem;
+}
+
+.login-box h1 {
+  margin-bottom: 1.5rem;
+  color: #800066;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-box input[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background: #2000FF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-box input[type="submit"]:hover {
+  background: #800066;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.7rem 0 1.4rem 0px;
+  font-size: 0.9rem;
+}
+
+.small-text {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+
+/* ===================== LAYOUT (Dashboard) ===================== */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+.sidebar {
+  width: 260px;
+  background: #003366;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar .logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sidebar .logo img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  position: relative;
+  width: 100%;
+}
+
+.sidebar li > a,
+.sidebar li > button {
+  color: white;
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sidebar li > a:hover,
+.sidebar li > button:hover {
+  background-color: #0059b3;
+}
+
+.sidebar li ul {
+  display: none;
+  background-color: #004080;
+}
+
+.sidebar li.active ul {
+  display: block;
+}
+
+.sidebar li ul li a {
+  padding-left: 2rem;
+  font-size: 0.95rem;
+}
+
+
+.sidebar li button .caret {
+  float: right;
+  font-size: 0.7rem;
+  margin-top: 3px;
+}
+
+/* ===================== HEADER / TOPBAR ===================== */
+
+.topbar {
+  height: 60px;
+  background: #00264d;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  border-bottom: 1px solid #001933;
+}
+
+.topbar h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info a {
+  color: lightcoral;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+/* ===================== MAIN CONTENT AREA ===================== */
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.page-content {
+  flex: 1;
+  padding: 2rem;
+  background: #f5f5f5;
+  overflow-y: auto;
+}
+
+
+/* table styles */
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+form input, form select, form button {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+table th, table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
