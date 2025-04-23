@@ -1,5 +1,5 @@
 <?php
-require_once __DIRWUC RMS__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/db.php';
 
 // Handle search/filter input
 $search = $_GET['search'] ?? '';
