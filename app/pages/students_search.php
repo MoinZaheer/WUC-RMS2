@@ -16,18 +16,43 @@ $sql = "SELECT s.student_id, s.first_name, s.middle_name, s.surname, s.email, s.
         WHERE 1=1";
 
 
-// Add conditions dynamically
 $conditions = [];
 $params = [];
 
 if (!empty($search)) {
-        $conditions[] = "(s.student_id LIKE :search_id OR s.first_name LIKE :search_first OR s.surname LIKE :search_last)";
-        $params['search_id'] = "%$search%";
-        $params['search_first'] = "%$search%";
-        $params['search_last'] = "%$search%";
+  $keywords = preg_split('/\s+/', trim($search));
+  $keyword_conditions = [];
+  $i = 0;
 
-    
+  foreach ($keywords as $word) {
+      // unique placeholders per field
+      $param_id = ":keyword_id_$i";
+      $param_first = ":keyword_first_$i";
+      $param_middle = ":keyword_middle_$i";
+      $param_last = ":keyword_last_$i";
+
+      $keyword_conditions[] = "(
+          s.student_id LIKE $param_id OR
+          s.first_name LIKE $param_first OR
+          s.middle_name LIKE $param_middle OR
+          s.surname LIKE $param_last
+      )";
+
+      // bind values
+      $params["keyword_id_$i"] = "%$word%";
+      $params["keyword_first_$i"] = "%$word%";
+      $params["keyword_middle_$i"] = "%$word%";
+      $params["keyword_last_$i"] = "%$word%";
+
+      $i++;
+  }
+
+  if (!empty($keyword_conditions)) {
+      $conditions[] = '(' . implode(' AND ', $keyword_conditions) . ')';
+  }
 }
+
+
 if (!empty($course)) {
     $conditions[] = "s.course_code = :course";
     $params['course'] = $course;
@@ -41,7 +66,7 @@ if (!empty($status)) {
     $params['status'] = $status;
 }
 
-// Only add WHERE conditions if any filters are applied
+// only add WHERE conditions if any filters are applied
 if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
@@ -63,7 +88,7 @@ try {
 }
 
 
-// Dropdown options
+// dropdown options
 $courses = $pdo->query("SELECT course_code FROM Courses")->fetchAll();
 $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchAll();
 ?>
@@ -113,14 +138,16 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
     <tbody>
       <?php foreach ($students as $s): ?>
         <tr>
-        <td><?= htmlspecialchars($s['student_id'] ?? '') ?></td>
-        <td><?= htmlspecialchars(trim(($s['first_name'] ?? '') . ' ' . ($s['middle_name'] ?? '') . ' ' . ($s['surname'] ?? ''))) ?></td>
-        <td><?= htmlspecialchars($s['email'] ?? '') ?></td>
-        <td><?= htmlspecialchars($s['phone'] ?? '') ?></td>
-        <td><?= htmlspecialchars($s['record_status'] ?? '') ?></td>
-        <td><?= htmlspecialchars($s['course_code'] ?? '') ?></td>
-        <td><?= htmlspecialchars($s['tutor_name'] ?? '—') ?></td>
-          <td><a href="/index.php?page=student_profile&id=<?= $s['student_id'] ?>">View</a></td>
+          <td><?= htmlspecialchars($s['student_id'] ?? '') ?></td>
+          <td><?= htmlspecialchars(trim(($s['first_name'] ?? '') . ' ' . ($s['middle_name'] ?? '') . ' ' . ($s['surname'] ?? ''))) ?></td>
+          <td><?= htmlspecialchars($s['email'] ?? '') ?></td>
+          <td><?= htmlspecialchars($s['phone'] ?? '') ?></td>
+          <td><?= htmlspecialchars($s['record_status'] ?? '') ?></td>
+          <td><?= htmlspecialchars($s['course_code'] ?? '') ?></td>
+          <td><?= htmlspecialchars($s['tutor_name'] ?? '—') ?></td>
+          <td>
+          <a href="/index.php?page=students_profile&id=<?= urlencode($s['student_id']) ?>">View/ Edit</a>
+          </td>
         </tr>
       <?php endforeach; ?>
     </tbody>

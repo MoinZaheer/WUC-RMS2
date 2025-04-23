@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - WUC RMS</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="loginstyle.css" />
 </head>
 <body class="login-page">
   <div class="login-box">
@@ -63,11 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form action="/index.php?page=login" method="POST">
       <input type="text" name="user_id" placeholder="Email / ID" required />
       <input type="password" name="password" placeholder="Password" required />
-      <div class="checkbox-container">
-        <label><input type="checkbox" name="remember_me" /> Keep me Logged in</label>
-        <a href="#">Forgot your password?</a>
-      </div>
-      <input type="submit" value="Login" />
+  
+        <div class="checkbox-container">
+          <label><input type="checkbox" name="remember_me" /> Keep me Logged in</label>
+          <a href="#">Forgot your password?</a>
+        </div>
+      
+        <input type="submit" value="Login" />
+  
     </form>
      <!--  -->
   </div>

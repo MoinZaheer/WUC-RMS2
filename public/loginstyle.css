@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  a {
+    color: #800066;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url("/images/BG.png") no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+  .login-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .login-box img.logo {
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+  
+  .login-box h1 {
+    margin-bottom: 1.5rem;
+    color: #800066;
+  }
+  
+  .login-box input[type="text"],
+  .login-box input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .login-box input[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: #2000FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .login-box input[type="submit"]:hover {
+    background: #800066;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.7rem 0 1.4rem 0px;
+    font-size: 0.9rem;
+  }
+  
+  .small-text {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  
+  
+  
