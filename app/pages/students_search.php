@@ -102,7 +102,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 
 <h2>Search Students</h2>
 
-<form method="get" action="/index.php" style="margin-bottom: 1rem;">
+<form method="get" action="/index.php" class="search-form" >
   <input type="hidden" name="page" value="students_search">
 
   <input type="text" name="search" placeholder="Search by name or ID" value="<?= htmlspecialchars($search) ?>">
@@ -135,9 +135,9 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
   <button type="submit">Search</button>
 
   <!-- Customize Columns Button -->
-  <div style="display: inline-block; margin-left: 1rem; position: relative;">
+  <div class="columns-dropdown-container" >
     <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
-    <div id="columnsDropdown" style="display:none; position: absolute; background: white; border: 1px solid #ccc; padding: 1rem; z-index:10;">
+    <div id="columnsDropdown" class="columns-dropdown" >
       <?php foreach ($available_columns as $col => $label): ?>
         <div>
           <label>
@@ -155,7 +155,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 </form>
 
 <?php if ($students): ?>
-  <table>
+  <table class="search-table">
     <thead>
       <tr>
         <?php foreach ($selected_columns as $col_key): ?>
