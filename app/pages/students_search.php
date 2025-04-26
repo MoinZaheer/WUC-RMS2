@@ -102,6 +102,12 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 
 <h2>Search Students</h2>
 
+<?php if (isset($_GET['message'])): ?>
+  <div class="toast">
+    <?= htmlspecialchars($_GET['message']) ?>
+  </div>
+<?php endif; ?>
+
 <form method="get" action="/index.php" class="search-form" >
   <input type="hidden" name="page" value="students_search">
 

@@ -79,6 +79,13 @@ try {
 
 <h2>Search Staff</h2>
 
+<?php if (isset($_GET['message'])): ?>
+  <div class="toast">
+    <?= htmlspecialchars($_GET['message']) ?>
+  </div>
+<?php endif; ?>
+
+
 <!-- Search & Filters -->
 <form method="get" action="/index.php" class="search-form">
   <input type="hidden" name="page" value="staff_search">
