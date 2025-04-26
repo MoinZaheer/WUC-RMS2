@@ -46,7 +46,7 @@ $tutor = $tutorStmt->fetch();
       <input type="text" name="middle_name" value="<?= htmlspecialchars($student['middle_name'] ?? '') ?>" placeholder="Middle Name">
       <input type="text" name="surname" value="<?= htmlspecialchars($student['surname'] ?? '') ?>" placeholder="Surname">
     <?php else: ?>
-      <?= htmlspecialchars(($student['first_name'] ?? '') . ' ' . ($student['middle_name'] ?? '') . ' ' . ($student['surname'] ?? '')) ?>
+      <?= htmlspecialchars(trim(($student['first_name'] ?? '') . ' ' . ($student['middle_name'] ?? '') . ' ' . ($student['surname'] ?? ''))) ?>
     <?php endif; ?>
   </td></tr>
 
@@ -62,17 +62,33 @@ $tutor = $tutorStmt->fetch();
         : htmlspecialchars($student['phone'] ?? '') ?>
   </td></tr>
 
-  <tr><th>Term Address:</th><td>
-    <?= $editMode
-        ? '<textarea name="term_address">' . htmlspecialchars($student['term_address'] ?? '') . '</textarea>'
-        : htmlspecialchars($student['term_address'] ?? '') ?>
-  </td></tr>
+  <!-- Term-time Address -->
+  <tr><th>Term Time Address:</th>
+      <td>
+        <?php if ($editMode): ?>
+          <input type="text" name="term_street" placeholder="Street" value="<?= htmlspecialchars($student['term_street'] ?? '') ?>"><br>
+          <input type="text" name="term_town" placeholder="Town" value="<?= htmlspecialchars($student['term_town'] ?? '') ?>"><br>
+          <input type="text" name="term_city" placeholder="City" value="<?= htmlspecialchars($student['term_city'] ?? '') ?>"><br>
+          <input type="text" name="term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['term_postcode'] ?? '') ?>">
+        <?php else: ?>
+          <?= htmlspecialchars(trim(($student['term_street'] ?? '') . ', ' . ($student['term_town'] ?? '') . ', ' . ($student['term_city'] ?? '') . ', ' . ($student['term_postcode'] ?? ''))) ?>
+        <?php endif; ?>
+      </td>
+  </tr>
 
-  <tr><th>Non-Term Address:</th><td>
-    <?= $editMode
-        ? '<textarea name="non_term_address">' . htmlspecialchars($student['non_term_address'] ?? '') . '</textarea>'
-        : htmlspecialchars($student['non_term_address'] ?? '') ?>
-  </td></tr>
+  <!-- Non-Term-time Address -->
+  <tr><th>Non-Term Time Address:</th>
+      <td>
+        <?php if ($editMode): ?>
+          <input type="text" name="non_term_street" placeholder="Street" value="<?= htmlspecialchars($student['non_term_street'] ?? '') ?>"><br>
+          <input type="text" name="non_term_town" placeholder="Town" value="<?= htmlspecialchars($student['non_term_town'] ?? '') ?>"><br>
+          <input type="text" name="non_term_city" placeholder="City" value="<?= htmlspecialchars($student['non_term_city'] ?? '') ?>"><br>
+          <input type="text" name="non_term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['non_term_postcode'] ?? '') ?>">
+        <?php else: ?>
+          <?= htmlspecialchars(trim(($student['non_term_street'] ?? '') . ', ' . ($student['non_term_town'] ?? '') . ', ' . ($student['non_term_city'] ?? '') . ', ' . ($student['non_term_postcode'] ?? ''))) ?>
+        <?php endif; ?>
+      </td>
+  </tr>
 
   <tr><th>Entry Qualifications:</th><td>
     <?= $editMode
@@ -84,9 +100,7 @@ $tutor = $tutorStmt->fetch();
     <?php if ($editMode): ?>
       <select name="record_status">
         <?php foreach (['Provisional', 'Live', 'Dormant'] as $status): ?>
-          <option value="<?= $status ?>" <?= ($student['record_status'] ?? '') === $status ? 'selected' : '' ?>>
-            <?= $status ?>
-          </option>
+          <option value="<?= $status ?>" <?= ($student['record_status'] ?? '') === $status ? 'selected' : '' ?>><?= $status ?></option>
         <?php endforeach; ?>
       </select>
     <?php else: ?>
@@ -99,9 +113,7 @@ $tutor = $tutorStmt->fetch();
       <?php if ($editMode): ?>
         <select name="dormancy_reason">
           <?php foreach (['Graduated', 'Withdrawn', 'Terminated'] as $reason): ?>
-            <option value="<?= $reason ?>" <?= ($student['dormancy_reason'] ?? '') === $reason ? 'selected' : '' ?>>
-              <?= $reason ?>
-            </option>
+            <option value="<?= $reason ?>" <?= ($student['dormancy_reason'] ?? '') === $reason ? 'selected' : '' ?>><?= $reason ?></option>
           <?php endforeach; ?>
         </select>
       <?php else: ?>
@@ -118,7 +130,7 @@ $tutor = $tutorStmt->fetch();
 
   <tr><th>Personal Tutor:</th><td>
     <?= $tutor
-        ? htmlspecialchars(($tutor['first_name'] ?? '') . ' ' . ($tutor['middle_name'] ?? '') . ' ' . ($tutor['surname'] ?? ''))
+        ? htmlspecialchars(trim(($tutor['first_name'] ?? '') . ' ' . ($tutor['middle_name'] ?? '') . ' ' . ($tutor['surname'] ?? '')))
         : 'Not Assigned' ?>
   </td></tr>
 </table>
