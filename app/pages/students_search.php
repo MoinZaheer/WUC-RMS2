@@ -1,14 +1,25 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
 
-// Handle filters
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// filters
 $search = $_GET['search'] ?? '';
 $course = $_GET['course'] ?? '';
 $tutor = $_GET['tutor'] ?? '';
 $status = $_GET['status'] ?? '';
 
-// Handle columns (if selected)
-$selected_columns = $_GET['columns'] ?? ['student_id', 'name', 'email', 'phone', 'record_status', 'course_code', 'tutor_name']; // default columns
+// columns to display (session stored or default ones)
+if (isset($_GET['columns'])) {
+    $selected_columns = $_GET['columns'];
+    $_SESSION['students_selected_columns'] = $selected_columns; // save to session
+} elseif (isset($_SESSION['students_selected_columns'])) {
+    $selected_columns = $_SESSION['students_selected_columns'];
+} else {
+    $selected_columns = ['student_id', 'name', 'email', 'phone', 'record_status', 'course_code', 'tutor_name']; // default
+}
 
 // Available columns
 $available_columns = [
