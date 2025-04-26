@@ -261,3 +261,53 @@ table th, table td {
   background-color: #800066;
   color: white;
 }
+
+
+/* Search Pages */
+
+/* Form container */
+.search-form {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+/* Inline form elements */
+.search-form input[type="text"],
+.search-form select,
+.search-form button {
+  margin-right: 0.5rem;
+}
+
+/* Customize columns dropdown container */
+.columns-dropdown-container {
+  display: inline-block;
+  margin-left: 1rem;
+  position: relative;
+}
+
+/* The hidden dropdown menu */
+.columns-dropdown {
+  display: none;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  z-index: 10;
+  min-width: 200px;
+}
+
+
+/* .columns-dropdown.active {
+  display: block;
+} */
+
+
+/* Staff table margin */
+.search-table {
+  margin-top: 1rem;
+}
+
+
+
+
+

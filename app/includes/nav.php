@@ -20,7 +20,7 @@ if ($role === 'admin') {
       <button>Staff <span class="caret">▼</span></button>
       <ul>
         <li><a href="/index.php?page=staff_create">Create Staff</a></li>
-        <li><a href="/index.php?page=staff_view">Search Staff</a></li>
+        <li><a href="/index.php?page=staff_search">Search Staff</a></li>
       </ul>
     </li>
 

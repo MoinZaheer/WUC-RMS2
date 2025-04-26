@@ -19,6 +19,7 @@ switch ($page) {
     case 'students_search':
     case 'students_create':
     case 'students_profile':
+    case 'staff_search':
         // Twrapped in layout
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));
