@@ -9,7 +9,43 @@ if (!$student_id) {
     exit;
 }
 
-// Fetch student data
+// Handle form POST (Save/Save & Exit)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $fields = [
+        'first_name', 'middle_name', 'surname', 'email', 'phone',
+        'term_street', 'term_town', 'term_city', 'term_postcode',
+        'non_term_street', 'non_term_town', 'non_term_city', 'non_term_postcode',
+        'entry_qualifications', 'record_status', 'dormancy_reason', 'course_code'
+    ];
+
+    $updateData = [];
+    $updateFields = [];
+
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            $updateFields[] = "$field = :$field";
+            $updateData[$field] = trim($_POST[$field]);
+        }
+    }
+
+    if (!empty($updateFields)) {
+        $updateData['student_id'] = $student_id;
+        $sql = "UPDATE Students SET " . implode(', ', $updateFields) . " WHERE student_id = :student_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($updateData);
+    }
+
+    // Redirect accordingly
+    if (isset($_POST['save_exit'])) {
+        header("Location: /index.php?page=students_search&message=Student updated successfully");
+        exit();
+    } else {
+        header("Location: /index.php?page=students_profile&id=" . urlencode($student_id) . "&edit=1&message=Changes saved successfully");
+        exit();
+    }
+}
+
+// Fetch student data after any potential update
 $stmt = $pdo->prepare("SELECT * FROM Students WHERE student_id = :id");
 $stmt->execute(['id' => $student_id]);
 $student = $stmt->fetch();
@@ -32,9 +68,16 @@ $tutor = $tutorStmt->fetch();
 
 <h2>Student Profile</h2>
 
+<!-- Message if successfull or not -->
+<?php if (isset($_GET['message'])): ?>
+  <div class="toast">
+    <?= htmlspecialchars($_GET['message']) ?>
+  </div>
+<?php endif; ?>
+
+
 <?php if ($editMode): ?>
-<form method="post" action="/app/handlers/student_update.php">
-  <input type="hidden" name="student_id" value="<?= htmlspecialchars($student_id) ?>">
+<form method="post" action="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>">
 <?php endif; ?>
 
 <table>
@@ -63,32 +106,28 @@ $tutor = $tutorStmt->fetch();
   </td></tr>
 
   <!-- Term-time Address -->
-  <tr><th>Term Time Address:</th>
-      <td>
-        <?php if ($editMode): ?>
-          <input type="text" name="term_street" placeholder="Street" value="<?= htmlspecialchars($student['term_street'] ?? '') ?>"><br>
-          <input type="text" name="term_town" placeholder="Town" value="<?= htmlspecialchars($student['term_town'] ?? '') ?>"><br>
-          <input type="text" name="term_city" placeholder="City" value="<?= htmlspecialchars($student['term_city'] ?? '') ?>"><br>
-          <input type="text" name="term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['term_postcode'] ?? '') ?>">
-        <?php else: ?>
-          <?= htmlspecialchars(trim(($student['term_street'] ?? '') . ', ' . ($student['term_town'] ?? '') . ', ' . ($student['term_city'] ?? '') . ', ' . ($student['term_postcode'] ?? ''))) ?>
-        <?php endif; ?>
-      </td>
-  </tr>
+  <tr><th>Term Time Address:</th><td>
+    <?php if ($editMode): ?>
+      <input type="text" name="term_street" placeholder="Street" value="<?= htmlspecialchars($student['term_street'] ?? '') ?>"><br>
+      <input type="text" name="term_town" placeholder="Town" value="<?= htmlspecialchars($student['term_town'] ?? '') ?>"><br>
+      <input type="text" name="term_city" placeholder="City" value="<?= htmlspecialchars($student['term_city'] ?? '') ?>"><br>
+      <input type="text" name="term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['term_postcode'] ?? '') ?>">
+    <?php else: ?>
+      <?= htmlspecialchars(trim(($student['term_street'] ?? '') . ', ' . ($student['term_town'] ?? '') . ', ' . ($student['term_city'] ?? '') . ', ' . ($student['term_postcode'] ?? ''))) ?>
+    <?php endif; ?>
+  </td></tr>
 
   <!-- Non-Term-time Address -->
-  <tr><th>Non-Term Time Address:</th>
-      <td>
-        <?php if ($editMode): ?>
-          <input type="text" name="non_term_street" placeholder="Street" value="<?= htmlspecialchars($student['non_term_street'] ?? '') ?>"><br>
-          <input type="text" name="non_term_town" placeholder="Town" value="<?= htmlspecialchars($student['non_term_town'] ?? '') ?>"><br>
-          <input type="text" name="non_term_city" placeholder="City" value="<?= htmlspecialchars($student['non_term_city'] ?? '') ?>"><br>
-          <input type="text" name="non_term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['non_term_postcode'] ?? '') ?>">
-        <?php else: ?>
-          <?= htmlspecialchars(trim(($student['non_term_street'] ?? '') . ', ' . ($student['non_term_town'] ?? '') . ', ' . ($student['non_term_city'] ?? '') . ', ' . ($student['non_term_postcode'] ?? ''))) ?>
-        <?php endif; ?>
-      </td>
-  </tr>
+  <tr><th>Non-Term Time Address:</th><td>
+    <?php if ($editMode): ?>
+      <input type="text" name="non_term_street" placeholder="Street" value="<?= htmlspecialchars($student['non_term_street'] ?? '') ?>"><br>
+      <input type="text" name="non_term_town" placeholder="Town" value="<?= htmlspecialchars($student['non_term_town'] ?? '') ?>"><br>
+      <input type="text" name="non_term_city" placeholder="City" value="<?= htmlspecialchars($student['non_term_city'] ?? '') ?>"><br>
+      <input type="text" name="non_term_postcode" placeholder="Postcode" value="<?= htmlspecialchars($student['non_term_postcode'] ?? '') ?>">
+    <?php else: ?>
+      <?= htmlspecialchars(trim(($student['non_term_street'] ?? '') . ', ' . ($student['non_term_town'] ?? '') . ', ' . ($student['non_term_city'] ?? '') . ', ' . ($student['non_term_postcode'] ?? ''))) ?>
+    <?php endif; ?>
+  </td></tr>
 
   <tr><th>Entry Qualifications:</th><td>
     <?= $editMode
@@ -136,11 +175,11 @@ $tutor = $tutorStmt->fetch();
 </table>
 
 <?php if ($editMode): ?>
-  <button type="submit">Save Changes</button>
+  <br>
+  <button type="submit" name="save">Save Changes</button>
+  <button type="submit" name="save_exit">Save & Exit</button>
   <a href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>">Cancel</a>
 </form>
 <?php else: ?>
-  <p>
-    <a href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>&edit=1">Edit Student</a>
-  </p>
+  <p><a href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>&edit=1">Edit Student</a></p>
 <?php endif; ?>
