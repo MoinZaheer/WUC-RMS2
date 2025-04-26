@@ -1,57 +1,61 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
 
-// Handle search/filter input
+// Handle filters
 $search = $_GET['search'] ?? '';
 $course = $_GET['course'] ?? '';
 $tutor = $_GET['tutor'] ?? '';
 $status = $_GET['status'] ?? '';
 
+// Handle columns (if selected)
+$selected_columns = $_GET['columns'] ?? ['student_id', 'name', 'email', 'phone', 'record_status', 'course_code', 'tutor_name']; // default columns
+
+// Available columns
+$available_columns = [
+    'student_id' => 'Student ID',
+    'name' => 'Name',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'record_status' => 'Record Status',
+    'course_code' => 'Course Code',
+    'tutor_name' => 'Personal Tutor',
+    'term_address' => 'Term Address',
+    'non_term_address' => 'Non-Term Address'
+];
+
 // Base query
-$sql = "SELECT s.student_id, s.first_name, s.middle_name, s.surname, s.email, s.phone, s.record_status, s.course_code,
+$sql = "SELECT s.student_id, s.first_name, s.middle_name, s.surname, s.email, s.phone,
+               s.term_street, s.term_town, s.term_city, s.term_postcode,
+               s.non_term_street, s.non_term_town, s.non_term_city, s.non_term_postcode,
+               s.record_status, s.course_code,
                CONCAT(st.first_name, ' ', st.surname) AS tutor_name
         FROM Students s
         LEFT JOIN PersonalTutors pt ON s.student_id = pt.student_id
         LEFT JOIN Staff st ON pt.tutor_id = st.staff_id
         WHERE 1=1";
 
-
-$conditions = [];
 $params = [];
+$conditions = [];
 
 if (!empty($search)) {
-  $keywords = preg_split('/\s+/', trim($search));
-  $keyword_conditions = [];
-  $i = 0;
-
-  foreach ($keywords as $word) {
-      // unique placeholders per field
-      $param_id = ":keyword_id_$i";
-      $param_first = ":keyword_first_$i";
-      $param_middle = ":keyword_middle_$i";
-      $param_last = ":keyword_last_$i";
-
-      $keyword_conditions[] = "(
-          s.student_id LIKE $param_id OR
-          s.first_name LIKE $param_first OR
-          s.middle_name LIKE $param_middle OR
-          s.surname LIKE $param_last
-      )";
-
-      // bind values
-      $params["keyword_id_$i"] = "%$word%";
-      $params["keyword_first_$i"] = "%$word%";
-      $params["keyword_middle_$i"] = "%$word%";
-      $params["keyword_last_$i"] = "%$word%";
-
-      $i++;
-  }
-
-  if (!empty($keyword_conditions)) {
-      $conditions[] = '(' . implode(' AND ', $keyword_conditions) . ')';
-  }
+    $keywords = preg_split('/\s+/', trim($search));
+    $keyword_conditions = [];
+    $i = 0;
+    foreach ($keywords as $word) {
+        $keyword_conditions[] = "(
+            s.student_id LIKE :keyword_id_$i OR
+            s.first_name LIKE :keyword_first_$i OR
+            s.middle_name LIKE :keyword_middle_$i OR
+            s.surname LIKE :keyword_last_$i
+        )";
+        $params["keyword_id_$i"] = "%$word%";
+        $params["keyword_first_$i"] = "%$word%";
+        $params["keyword_middle_$i"] = "%$word%";
+        $params["keyword_last_$i"] = "%$word%";
+        $i++;
+    }
+    $conditions[] = '(' . implode(' AND ', $keyword_conditions) . ')';
 }
-
 
 if (!empty($course)) {
     $conditions[] = "s.course_code = :course";
@@ -66,36 +70,28 @@ if (!empty($status)) {
     $params['status'] = $status;
 }
 
-// only add WHERE conditions if any filters are applied
 if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
+// Execute
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $students = $stmt->fetchAll();
 } catch (PDOException $e) {
     echo "<pre>SQL Error: " . $e->getMessage() . "</pre>";
-    echo "<pre>SQL: $sql</pre>";
-    echo "<pre>Params: " . print_r($params, true) . "</pre>";
-    
-    // temporary debug output
-    echo "<pre>SQL: $sql</pre>";
-    echo "<pre>Params: " . print_r($params, true) . "</pre>";
-
     exit;
 }
 
-
-// dropdown options
+// Dropdown options
 $courses = $pdo->query("SELECT course_code FROM Courses")->fetchAll();
 $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchAll();
 ?>
 
 <h2>Search Students</h2>
 
-<form method="get" action="/index.php">
+<form method="get" action="/index.php" style="margin-bottom: 1rem;">
   <input type="hidden" name="page" value="students_search">
 
   <input type="text" name="search" placeholder="Search by name or ID" value="<?= htmlspecialchars($search) ?>">
@@ -126,28 +122,76 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
   </select>
 
   <button type="submit">Search</button>
+
+  <!-- Customize Columns Button -->
+  <div style="display: inline-block; margin-left: 1rem; position: relative;">
+    <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
+    <div id="columnsDropdown" style="display:none; position: absolute; background: white; border: 1px solid #ccc; padding: 1rem; z-index:10;">
+      <?php foreach ($available_columns as $col => $label): ?>
+        <div>
+          <label>
+            <input type="checkbox" name="columns[]" value="<?= $col ?>" <?= in_array($col, $selected_columns) ? 'checked' : '' ?>>
+            <?= $label ?>
+          </label>
+        </div>
+      <?php endforeach; ?>
+      <div style="margin-top: 0.5rem;">
+        <button type="submit">Apply</button>
+      </div>
+    </div>
+  </div>
+
 </form>
 
 <?php if ($students): ?>
   <table>
     <thead>
       <tr>
-        <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Course</th><th>Tutor</th><th>Actions</th>
+        <?php foreach ($selected_columns as $col_key): ?>
+          <th><?= htmlspecialchars($available_columns[$col_key] ?? ucfirst($col_key)) ?></th>
+        <?php endforeach; ?>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <?php foreach ($students as $s): ?>
         <tr>
-          <td><?= htmlspecialchars($s['student_id'] ?? '') ?></td>
-          <td><?= htmlspecialchars(trim(($s['first_name'] ?? '') . ' ' . ($s['middle_name'] ?? '') . ' ' . ($s['surname'] ?? ''))) ?></td>
-          <td><?= htmlspecialchars($s['email'] ?? '') ?></td>
-          <td><?= htmlspecialchars($s['phone'] ?? '') ?></td>
-          <td><?= htmlspecialchars($s['record_status'] ?? '') ?></td>
-          <td><?= htmlspecialchars($s['course_code'] ?? '') ?></td>
-          <td><?= htmlspecialchars($s['tutor_name'] ?? '—') ?></td>
-          <td>
-          <a href="/index.php?page=students_profile&id=<?= urlencode($s['student_id']) ?>">View/ Edit</a>
-          </td>
+          <?php foreach ($selected_columns as $col_key): ?>
+            <td>
+              <?php
+              switch ($col_key) {
+                  case 'student_id':
+                      echo htmlspecialchars($s['student_id'] ?? '');
+                      break;
+                  case 'name':
+                      echo htmlspecialchars(trim(($s['first_name'] ?? '') . ' ' . ($s['middle_name'] ?? '') . ' ' . ($s['surname'] ?? '')));
+                      break;
+                  case 'email':
+                      echo htmlspecialchars($s['email'] ?? '');
+                      break;
+                  case 'phone':
+                      echo htmlspecialchars($s['phone'] ?? '');
+                      break;
+                  case 'record_status':
+                      echo htmlspecialchars($s['record_status'] ?? '');
+                      break;
+                  case 'course_code':
+                      echo htmlspecialchars($s['course_code'] ?? '');
+                      break;
+                  case 'tutor_name':
+                      echo htmlspecialchars($s['tutor_name'] ?? '—');
+                      break;
+                  case 'term_address':
+                      echo htmlspecialchars(trim(($s['term_street'] ?? '') . ', ' . ($s['term_town'] ?? '') . ', ' . ($s['term_city'] ?? '') . ', ' . ($s['term_postcode'] ?? '')));
+                      break;
+                  case 'non_term_address':
+                      echo htmlspecialchars(trim(($s['non_term_street'] ?? '') . ', ' . ($s['non_term_town'] ?? '') . ', ' . ($s['non_term_city'] ?? '') . ', ' . ($s['non_term_postcode'] ?? '')));
+                      break;
+              }
+              ?>
+            </td>
+          <?php endforeach; ?>
+          <td><a href="/index.php?page=students_profile&id=<?= urlencode($s['student_id']) ?>">View / Edit</a></td>
         </tr>
       <?php endforeach; ?>
     </tbody>
@@ -155,3 +199,11 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 <?php else: ?>
   <p>No students found.</p>
 <?php endif; ?>
+
+<!-- Tiny JS to handle dropdown -->
+<script>
+function toggleColumnsDropdown() {
+    var dropdown = document.getElementById('columnsDropdown');
+    dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+}
+</script>
