@@ -162,10 +162,22 @@ $tutor = $tutorStmt->fetch();
   <?php endif; ?>
 
   <tr><th>Course Code:</th><td>
-    <?= $editMode
-        ? '<input type="text" name="course_code" value="' . htmlspecialchars($student['course_code'] ?? '') . '">'
-        : htmlspecialchars($student['course_code'] ?? '') ?>
-  </td></tr>
+    <?php if ($editMode): ?>
+      <select name="course_code" class="form-select">
+        <option value="">-- Select Course --</option>
+        <?php
+          $courses = $pdo->query("SELECT course_code FROM Courses")->fetchAll();
+          foreach ($courses as $course) {
+              $selected = ($student['course_code'] ?? '') === $course['course_code'] ? 'selected' : '';
+              echo '<option value="' . htmlspecialchars($course['course_code']) . '" ' . $selected . '>' . htmlspecialchars($course['course_code']) . '</option>';
+          }
+        ?>
+      </select>
+    <?php else: ?>
+      <?= htmlspecialchars($student['course_code'] ?? '') ?>
+    <?php endif; ?>
+</td></tr>
+
 
   <tr><th>Personal Tutor:</th><td>
     <?= $tutor

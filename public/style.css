@@ -214,3 +214,12 @@ table th, table td {
     transform: translateX(100%);
   }
 }
+
+/*select dropdowns */
+.form-select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
