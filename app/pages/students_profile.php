@@ -163,7 +163,7 @@ $tutor = $tutorStmt->fetch();
 
   <tr><th>Course Code:</th><td>
     <?php if ($editMode): ?>
-      <select name="course_code" class="form-select">
+      <select name="course_code" class="form-select" required>
         <option value="">-- Select Course --</option>
         <?php
           $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
