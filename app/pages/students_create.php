@@ -1,8 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Fetch courses for dropdown
-$courses = $pdo->query("SELECT course_code FROM Courses")->fetchAll();
+$courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $_SESSION['flash_success'] = "Student created successfully.";
-        header("Location: /index.php?page=students_search");
+        header("Location: /index.php?page=students_create");
         exit;
 
     } catch (PDOException $e) {
@@ -73,11 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <h2>Create Student</h2>
 
+<?php if (!empty($_SESSION['flash_success'])): ?>
+  <div class="toast"><?= htmlspecialchars($_SESSION['flash_success']) ?></div>
+  <?php unset($_SESSION['flash_success']); ?>
+<?php endif; ?>
+
 <?php if (!empty($error)): ?>
   <div class="alert-danger"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-<form method="post" action="/index.php?page=students_create">
+<form method="post" action="/index.php?page=students_create" id="studentCreateForm">
 
 <table>
   <tr><th>Student ID:</th><td><input type="text" name="student_id" required></td></tr>
@@ -106,15 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr><th>Entry Qualifications:</th><td><textarea name="entry_qualifications"></textarea></td></tr>
 
   <tr><th>Record Status:</th><td>
-    <select name="record_status" required>
+    <select name="record_status" id="recordStatus" required>
       <option value="Provisional">Provisional</option>
       <option value="Live">Live</option>
       <option value="Dormant">Dormant</option>
     </select>
   </td></tr>
 
-  <tr><th>Dormancy Reason (if Dormant):</th><td>
-    <select name="dormancy_reason">
+  <tr><th>Dormancy Reason:</th><td>
+    <select name="dormancy_reason" id="dormancyReason" disabled>
       <option value="">-- Select --</option>
       <option value="Graduated">Graduated</option>
       <option value="Withdrawn">Withdrawn</option>
@@ -125,7 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr><th>Course Code:</th><td>
     <select name="course_code" required>
       <?php foreach ($courses as $c): ?>
-        <option value="<?= htmlspecialchars($c['course_code']) ?>"><?= htmlspecialchars($c['course_code']) ?></option>
+        <option value="<?= htmlspecialchars($c['course_code']) ?>">
+          <?= htmlspecialchars($c['course_code']) ?> - <?= htmlspecialchars($c['course_name']) ?>
+        </option>
       <?php endforeach; ?>
     </select>
   </td></tr>
@@ -133,7 +143,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <br>
 
-<button type="submit">Create Student</button>
-<a href="/index.php?page=students_search" class="button">Cancel</a>
+<button type="submit" class="button-primary">Create Student</button>
+<a href="/index.php?page=students_search" class="button-cancel">Cancel</a>
 
 </form>
+
+<!-- Only enable Dormancy Reason if status is Dormant -->
+<script>
+document.getElementById('recordStatus').addEventListener('change', function() {
+    const dormancyReason = document.getElementById('dormancyReason');
+    if (this.value === 'Dormant') {
+        dormancyReason.disabled = false;
+    } else {
+        dormancyReason.disabled = true;
+        dormancyReason.value = '';
+    }
+});
+</script>

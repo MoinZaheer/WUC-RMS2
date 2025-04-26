@@ -190,10 +190,10 @@ $tutor = $tutorStmt->fetch();
 
 <?php if ($editMode): ?>
   <br>
-  <button type="submit" name="save">Save Changes</button>
-  <button type="submit" name="save_exit">Save & Exit</button>
-  <a href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>">Cancel</a>
+  <button type="submit" name="save" class="button-primary">Save Changes</button>
+  <button type="submit" name="save_exit" class="button-primary">Save & Exit</button>
+  <a class="button-cancel" href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>">Cancel</a>
 </form>
 <?php else: ?>
-  <p><a href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>&edit=1">Edit Student</a></p>
+  <p><a class="button-primary" href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>&edit=1">Edit Student</a></p>
 <?php endif; ?>

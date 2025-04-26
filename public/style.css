@@ -181,8 +181,7 @@ table th, table td {
 }
 
 
-/* Alert message on student profile page, when saving the data */
-/* ===================== TOAST ALERT ===================== */
+/* Alert message animation*/
 .toast {
   position: fixed;
   top: 20px;
@@ -222,4 +221,43 @@ table th, table td {
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 1rem;
+}
+
+/* buttons css */
+/* General button styles */
+.button-primary {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  background-color: #800066; /* WUC Purple */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-primary:hover {
+  background-color: #5c004d; /* Darker purple on hover */
+}
+
+/* Cancel button (secondary action) */
+.button-cancel {
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  background-color: white;
+  color: #800066;
+  border: 2px solid #800066;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-cancel:hover {
+  background-color: #800066;
+  color: white;
 }
