@@ -101,9 +101,9 @@ try {
 
   <button type="submit">Search</button>
 
-  <!-- Customize Columns Dropdown -->
+  <!-- Customise Columns Dropdown -->
   <div class="columns-dropdown-container" >
-    <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
+    <button type="button" onclick="toggleColumnsDropdown()">Customise Columns ⬇</button>
 
     <div id="columnsDropdown" class="columns-dropdown" >
       <?php foreach ($available_columns as $col => $label): ?>

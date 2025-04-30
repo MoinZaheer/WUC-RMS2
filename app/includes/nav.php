@@ -24,8 +24,21 @@ if ($role === 'admin') {
       </ul>
     </li>
 
-    <li><a href="/index.php?page=modules">Modules</a></li>
-    <li><a href="/index.php?page=personal_tutors">Personal Tutors</a></li>
+    <li>
+      <button>Modules <span class="caret">▼</span></button>
+      <ul>
+        <li><a href="/index.php?page=module_create">Create Module</a></li>
+        <li><a href="/index.php?page=modules_search">Search Modules</a></li>
+      </ul>
+    </li>
+  
+    <li>
+      <button>Personal Tutors <span class="caret">▼</span></button>
+      <ul>
+        <li><a href="/index.php?page=personal_tutor_assign">Assign Personal Tutor</a></li>
+        <li><a href="/index.php?page=personal_tutors_search">Search Personal Tutors</a></li>
+      </ul>
+    </li>
     <li><a href="/index.php?page=attendance">Attendance</a></li>
     <li><a href="/index.php?page=assignments">Assignments</a></li>
     <li><a href="/index.php?page=grades">Grades</a></li>
@@ -35,7 +48,7 @@ HTML;
 
 elseif ($role === 'student') {
     echo <<<HTML
-    <li><a href="/index.php?page=modules">Modules</a></li>
+    <li><a href="/index.php?page=modules_search">Modules</a></li>
     <li><a href="/index.php?page=personal_tutorials">Personal Tutorials</a></li>
     <li><a href="/index.php?page=attendance">Attendance</a></li>
     <li><a href="/index.php?page=assignments">Assignments</a></li>
@@ -46,7 +59,7 @@ HTML;
 
 elseif ($role === 'staff') {
     echo <<<HTML
-    <li><a href="/index.php?page=modules">Modules</a></li>
+    <li><a href="/index.php?page=modules_search">Modules</a></li>
     <li><a href="/index.php?page=personal_tutorials">Personal Tutorials</a></li>
     <li><a href="/index.php?page=assignments">Assignments</a></li>
     <li><a href="/index.php?page=grades">Grades</a></li>
