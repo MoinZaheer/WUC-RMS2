@@ -1,5 +1,30 @@
 NOTES for things to do/improve:
 
+Solution Feedback provided by student to be incorporated in the RMS
+	Attendance Marking
+	Information from Uni
+	Timetables
+	Personal Tutorials
+	etc
+
+Advanced Features:
+	Personal Tutorials Booking (Personal Tutors/ Students) - Request for a meeting
+	Recording Meeting Notes
+	
+	Attendance Tracking for the Student/ Academic
+	
+	NoticeBoard
+	
+	personal Diary (links to timetable/ personal tutorials/ and ability to add things to calendar)
+
+SQL Injection check
+
+Personal tutors assigned automatically when a student is created based on the logic
+
+Need to Create a Courses Tab
+
+Look into how we can automate personal tutor assignment
+
 Put CSS in style.css
 
 Double check all the Not Null and Required fields
