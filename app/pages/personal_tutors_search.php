@@ -199,7 +199,7 @@ $tutor_loads = $pdo->query("
                         </td>
                     <?php endforeach; ?>
                     <td>
-                        <a href="/index.php?page=student_profile&id=<?= urlencode($pt['student_id']) ?>">View Student</a>
+                        <a href="/index.php?page=students_profile&id=<?= urlencode($pt['student_id']) ?>">View Student</a>
                         <?php if ($pt['tutor_id']): ?>
                             | <a href="/index.php?page=staff_profile&id=<?= urlencode($pt['tutor_id']) ?>">View Tutor</a>
                         <?php endif; ?>
