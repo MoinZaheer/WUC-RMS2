@@ -8,6 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 // Handle filters
 $search = $_GET['search'] ?? '';
 $tutor = $_GET['tutor'] ?? '';
+$course = $_GET['course'] ?? '';
+$unassigned_only = isset($_GET['unassigned']) ? true : false;
 
 $default_columns = ['student_id', 'student_name', 'tutor_id', 'tutor_name'];
 
@@ -27,12 +29,16 @@ $available_columns = [
     'tutor_name' => 'Tutor Name'
 ];
 
-// Base query
+// Fetch dropdown values
+$tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE roles LIKE '%Personal tutor%' AND record_status = 'Live'")->fetchAll();
+$courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
+
+// Build base query
 $sql = "SELECT pt.student_id, 
-               s.first_name AS student_first, s.surname AS student_last,
+               s.first_name AS student_first, s.surname AS student_last, s.course_code,
                st.staff_id AS tutor_id, st.first_name AS tutor_first, st.surname AS tutor_last
         FROM PersonalTutors pt
-        LEFT JOIN Students s ON pt.student_id = s.student_id
+        JOIN Students s ON pt.student_id = s.student_id
         LEFT JOIN Staff st ON pt.tutor_id = st.staff_id
         WHERE 1=1";
 
@@ -56,10 +62,20 @@ if (!empty($tutor)) {
     $params['tutor'] = $tutor;
 }
 
+if (!empty($course)) {
+    $conditions[] = "s.course_code = :course";
+    $params['course'] = $course;
+}
+
+if ($unassigned_only) {
+    $conditions[] = "pt.tutor_id IS NULL";
+}
+
 if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
+// Run main query
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -69,12 +85,19 @@ try {
     exit;
 }
 
-// Fetch dropdown tutors
-$tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE role LIKE '%Personal tutor%'")->fetchAll();
+// Tutor load summary
+$tutor_loads = $pdo->query("
+    SELECT st.staff_id, st.first_name, st.surname, COUNT(pt.student_id) AS tutee_count
+    FROM PersonalTutors pt
+    JOIN Staff st ON pt.tutor_id = st.staff_id
+    GROUP BY st.staff_id
+    ORDER BY tutee_count DESC
+")->fetchAll();
 ?>
 
 <h2>Search Personal Tutors</h2>
 
+<!-- Filters -->
 <form method="get" action="/index.php">
     <input type="hidden" name="page" value="personal_tutors_search">
 
@@ -88,6 +111,20 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE rol
             </option>
         <?php endforeach; ?>
     </select>
+
+    <select name="course">
+        <option value="">All Courses</option>
+        <?php foreach ($courses as $c): ?>
+            <option value="<?= $c['course_code'] ?>" <?= $course === $c['course_code'] ? 'selected' : '' ?>>
+                <?= htmlspecialchars($c['course_code'] . ' - ' . $c['course_name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <label style="margin-left: 1rem;">
+        <input type="checkbox" name="unassigned" <?= $unassigned_only ? 'checked' : '' ?>>
+        Show Unassigned Only
+    </label>
 
     <button type="submit">Search</button>
 
@@ -114,6 +151,19 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE rol
     </div>
 </form>
 
+<!-- Tutor Load Summary -->
+<h3>Tutor Load Summary</h3>
+<ul>
+    <?php foreach ($tutor_loads as $load): ?>
+        <li>
+            <?= htmlspecialchars($load['first_name'] . ' ' . $load['surname']) ?> 
+            (<?= $load['staff_id'] ?>): 
+            <?= $load['tutee_count'] ?> tutees
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<!-- Results Table -->
 <?php if (!empty($tutor_assignments)): ?>
     <table>
         <thead>
