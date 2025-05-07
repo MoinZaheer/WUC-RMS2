@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'timeGridWeek,dayGridMonth'
     },
-    events: '/index.php?page=timetables_api' + new URLSearchParams(<?= json_encode($_GET) ?>).toString(),
+    events: '/timetables_api.php' + new URLSearchParams(<?= json_encode($_GET) ?>).toString(),
     eventClick: function(info) {
       const id = info.event.id;
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');

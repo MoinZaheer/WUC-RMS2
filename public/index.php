@@ -39,11 +39,6 @@ switch ($page) {
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));
 
-        if ($_GET['page'] === 'timetables_api') {
-            require_once '../app/api/timetables_api.php';
-            exit;
-        }
-
         // fallback if content file doesn't exist
         if (!file_exists($contentPath)) {
             $contentPath = __DIR__ . '/../app/pages/404.php';
