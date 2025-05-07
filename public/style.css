@@ -311,3 +311,8 @@ table th, table td {
 
 
 
+/* Calendar */
+#calendar {
+  max-width: 100%;
+  margin: 1rem auto;
+}

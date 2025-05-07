@@ -34,9 +34,15 @@ switch ($page) {
     case 'assignments_create':
     case 'grades':
     case 'timetables_calendar':
+    case 'timetables_api':
         // Twrapped in layout
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));
+
+        if ($_GET['page'] === 'timetables_api') {
+            require_once '../app/api/timetables_api.php';
+            exit;
+        }
 
         // fallback if content file doesn't exist
         if (!file_exists($contentPath)) {
@@ -51,3 +57,5 @@ switch ($page) {
         require_once __DIR__ . '/../app/pages/404.php';
         break;
 }
+
+
