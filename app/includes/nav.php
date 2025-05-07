@@ -39,7 +39,7 @@ if ($role === 'admin') {
         <li><a href="/index.php?page=personal_tutors_search">Search Personal Tutors</a></li>
       </ul>
     </li>
-    <li><a href="/index.php?page=attendance">Attendance</a></li>
+    <li><a href="/index.php?page=attendance_admin">Attendance</a></li>
     <li><a href="/index.php?page=assignments">Assignments</a></li>
     <li><a href="/index.php?page=grades">Grades</a></li>
     <li><a href="/index.php?page=timetables">Timetables</a></li>
