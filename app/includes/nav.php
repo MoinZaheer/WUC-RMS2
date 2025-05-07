@@ -35,7 +35,7 @@ if ($role === 'admin') {
     <li>
       <button>Personal Tutors <span class="caret">▼</span></button>
       <ul>
-        <li><a href="/index.php?page=personal_tutor_assign">Assign Personal Tutor</a></li>
+        <!-- <li><a href="/index.php?page=personal_tutor_assign">Assign Personal Tutor</a></li> -->
         <li><a href="/index.php?page=personal_tutors_search">Search Personal Tutors</a></li>
       </ul>
     </li>
