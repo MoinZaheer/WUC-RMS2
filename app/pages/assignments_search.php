@@ -104,7 +104,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
                     <td><?= htmlspecialchars($a['title']) ?></td>
                     <td><?= htmlspecialchars($a['type']) ?></td>
                     <td><?= htmlspecialchars($a['weight']) ?></td>
-                    <<td>
+                    <td>
                     <?= $a['due_date'] ? htmlspecialchars(date('d-m-Y', strtotime($a['due_date']))) : '—' ?>
                     </td>
 
