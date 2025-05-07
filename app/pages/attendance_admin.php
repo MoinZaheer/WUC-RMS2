@@ -11,6 +11,7 @@ $module_id = $_GET['module_id'] ?? '';
 $status = $_GET['status'] ?? '';
 $student_id = $_GET['student_id'] ?? '';
 
+
 $params = [];
 $conditions = [];
 
@@ -35,9 +36,9 @@ if (!empty($student_id)) {
     $params['student_id'] = "%$student_id%";
 }
 
-$where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
+$where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) . " AND s.record_status = 'Live'" : 'WHERE s.record_status = \'Live\'';
 
-// fetch attendance records
+// base query
 $sql = "
     SELECT a.*, t.date, t.start_time, m.module_code, m.module_title, s.first_name, s.surname, r.room_code
     FROM Attendance a
@@ -45,51 +46,42 @@ $sql = "
     JOIN Modules m ON t.module_id = m.module_id
     JOIN Students s ON a.student_id = s.student_id
     LEFT JOIN Rooms r ON t.room_id = r.room_id
-    " . ($where_sql ? $where_sql . " AND" : "WHERE") . " s.record_status = 'Live'
+    $where_sql
     ORDER BY t.date DESC, t.start_time DESC
 ";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $records = $stmt->fetchAll();
 
-// total students(filter )
+// total students
 if (empty($module_id) && empty($student_id)) {
     $total_students_stmt = $pdo->query("SELECT COUNT(*) FROM Students WHERE record_status = 'Live'");
     $total_students = $total_students_stmt->fetchColumn();
 } else {
-    // filter only Live students
     $live_student_ids = [];
-
     foreach ($records as $rec) {
-        $sid = $rec['student_id'];
-        $name = trim($rec['first_name'] . $rec['surname']);
-
-        // double check
-        if (!empty($sid)) {
-            $live_student_ids[$sid] = true;
+        if (!empty($rec['student_id'])) {
+            $live_student_ids[$rec['student_id']] = true;
         }
     }
-
     $total_students = count($live_student_ids);
 }
 
-
-// attendance today %
-$today_params = [];
-$today_filter = "t.date = :today";
-$today_params['today'] = $date;
-
+// attendance % today
+$today_params = ['today' => $date];
+$today_filter = "t.date = :today AND s.record_status = 'Live'";
 if (!empty($module_id)) {
     $today_filter .= " AND t.module_id = :module_today";
     $today_params['module_today'] = $module_id;
 }
 
 $today_query = "
-    SELECT status, COUNT(*) as count
+    SELECT a.status, COUNT(*) as count
     FROM Attendance a
     JOIN Timetables t ON a.timetable_id = t.timetable_id
+    JOIN Students s ON a.student_id = s.student_id
     WHERE $today_filter
-    GROUP BY status
+    GROUP BY a.status
 ";
 $today_stmt = $pdo->prepare($today_query);
 $today_stmt->execute($today_params);
@@ -98,35 +90,42 @@ $total_today = array_sum($today_counts);
 $present_today = $today_counts['Present'] ?? 0;
 $percentage_today = $total_today > 0 ? round(($present_today / $total_today) * 100, 1) : 0;
 
-// monthly avg %
+// monthly attendance %
 $month_start = date('Y-m-01');
 $month_end = date('Y-m-t');
-
-$month_query = "
-    SELECT status, COUNT(*) as count
-    FROM Attendance a
-    JOIN Timetables t ON a.timetable_id = t.timetable_id
-    WHERE t.date BETWEEN :start AND :end"
-    . (!empty($module_id) ? " AND t.module_id = :module_month" : "");
-
-$month_stmt = $pdo->prepare($month_query);
-$month_stmt->execute(array_merge([
+$month_params = [
     'start' => $month_start,
     'end' => $month_end
-], !empty($module_id) ? ['module_month' => $module_id] : []));
+];
+$month_filter = "t.date BETWEEN :start AND :end AND s.record_status = 'Live'";
 
+if (!empty($module_id)) {
+    $month_filter .= " AND t.module_id = :module_month";
+    $month_params['module_month'] = $module_id;
+}
+
+$month_query = "
+    SELECT a.status, COUNT(*) as count
+    FROM Attendance a
+    JOIN Timetables t ON a.timetable_id = t.timetable_id
+    JOIN Students s ON a.student_id = s.student_id
+    WHERE $month_filter
+    GROUP BY a.status
+";
+$month_stmt = $pdo->prepare($month_query);
+$month_stmt->execute($month_params);
 $month_counts = $month_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 $month_total = array_sum($month_counts);
 $month_present = $month_counts['Present'] ?? 0;
 $percentage_month = $month_total > 0 ? round(($month_present / $month_total) * 100, 1) : 0;
 
-// modules
+
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 ?>
 
-<h2>Attendance Overview (Admin)</h2>
+<h2>Attendance Overview</h2>
 
-<!-- summary -->
+<!-- summary-->
 <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
     <div><strong>% Present Today (<?= htmlspecialchars($date) ?>):</strong><br><?= $percentage_today ?>%</div>
     <div><strong>Avg Attendance This Month:</strong><br><?= $percentage_month ?>%</div>
@@ -160,7 +159,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
     <button type="submit" class="button-primary">Filter</button>
 </form>
 
-<!-- table-->
+<!--table-->
 <?php if (!empty($records)): ?>
     <table>
         <thead>
