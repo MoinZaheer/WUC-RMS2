@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Handle filters
+//filters
 $search = $_GET['search'] ?? '';
 $tutor = $_GET['tutor'] ?? '';
 $course = $_GET['course'] ?? '';
@@ -29,11 +29,11 @@ $available_columns = [
     'tutor_name' => 'Tutor Name'
 ];
 
-// Fetch dropdown values
+// dropdown values
 $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE roles LIKE '%Personal tutor%' AND record_status = 'Live'")->fetchAll();
 $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
 
-// Build base query
+//base query
 $sql = "SELECT pt.student_id, 
                s.first_name AS student_first, s.surname AS student_last, s.course_code,
                st.staff_id AS tutor_id, st.first_name AS tutor_first, st.surname AS tutor_last
@@ -49,10 +49,9 @@ if (!empty($search)) {
     $keywords = preg_split('/\s+/', trim($search));
     $i = 0;
     foreach ($keywords as $word) {
-        $conditions[] = "(s.first_name LIKE :student_first_$i OR s.surname LIKE :student_last_$i OR pt.student_id LIKE :student_id_$i)";
-        $params["student_first_$i"] = "%$word%";
-        $params["student_last_$i"] = "%$word%";
+        $conditions[] = "(pt.student_id LIKE :student_id_$i OR pt.tutor_id LIKE :tutor_id_$i)";
         $params["student_id_$i"] = "%$word%";
+        $params["tutor_id_$i"] = "%$word%";
         $i++;
     }
 }
@@ -75,7 +74,7 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
-// Run main query
+// main query
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -97,11 +96,11 @@ $tutor_loads = $pdo->query("
 
 <h2>Search Personal Tutors</h2>
 
-<!-- Filters -->
-<form method="get" action="/index.php">
+<!-- filters -->
+<form method="get" action="/index.php" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
     <input type="hidden" name="page" value="personal_tutors_search">
 
-    <input type="text" name="search" placeholder="Search by student name or ID" value="<?= htmlspecialchars($search) ?>">
+    <input type="text" name="search" placeholder="Search by Student ID or Tutor ID" value="<?= htmlspecialchars($search) ?>" style="flex: 1 0 250px; min-width: 250px;">
 
     <select name="tutor">
         <option value="">All Tutors</option>
@@ -126,46 +125,48 @@ $tutor_loads = $pdo->query("
         Show Unassigned Only
     </label>
 
-    <button type="submit">Search</button>
-
-    <!-- Customize Columns -->
-    <div class="columns-dropdown-container">
-        <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
-
-        <div id="columnsDropdown" class="columns-dropdown" style="display:none;">
-            <form method="get" action="/index.php">
-                <input type="hidden" name="page" value="personal_tutors_search">
-
-                <?php foreach ($available_columns as $col => $label): ?>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="columns[]" value="<?= $col ?>" <?= in_array($col, $selected_columns) ? 'checked' : '' ?>>
-                            <?= $label ?>
-                        </label>
-                    </div>
-                <?php endforeach; ?>
-
-                <button type="submit" style="margin-top: 0.5rem;">Apply</button>
-            </form>
-        </div>
-    </div>
+    <button type="submit" class="button-primary">Search</button>
 </form>
 
-<!-- Tutor Load Summary -->
-<h3>Tutor Load Summary</h3>
-<ul>
-    <?php foreach ($tutor_loads as $load): ?>
-        <li>
-            <?= htmlspecialchars($load['first_name'] . ' ' . $load['surname']) ?> 
-            (<?= $load['staff_id'] ?>): 
-            <?= $load['tutee_count'] ?> tutees
-        </li>
-    <?php endforeach; ?>
-</ul>
+<!-- tutor Load Summary -->
+<details style="margin-top: 1rem;">
+    <summary><strong>Tutor Load Summary (Click to Expand)</strong></summary>
+    <ul style="margin-top: 0.5rem;">
+        <?php foreach ($tutor_loads as $load): ?>
+            <li>
+                <?= htmlspecialchars($load['first_name'] . ' ' . $load['surname']) ?> 
+                (<?= $load['staff_id'] ?>): 
+                <?= $load['tutee_count'] ?> tutees
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</details>
 
-<!-- Results Table -->
+<!-- customize Columns -->
+<div class="columns-dropdown-container" style="margin-top: 1rem;">
+    <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
+
+    <div id="columnsDropdown" class="columns-dropdown" style="display:none;">
+        <form method="get" action="/index.php">
+            <input type="hidden" name="page" value="personal_tutors_search">
+
+            <?php foreach ($available_columns as $col => $label): ?>
+                <div>
+                    <label>
+                        <input type="checkbox" name="columns[]" value="<?= $col ?>" <?= in_array($col, $selected_columns) ? 'checked' : '' ?>>
+                        <?= $label ?>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+
+            <button type="submit" style="margin-top: 0.5rem;">Apply</button>
+        </form>
+    </div>
+</div>
+
+<!-- results Table -->
 <?php if (!empty($tutor_assignments)): ?>
-    <table>
+    <table class="search-table">
         <thead>
             <tr>
                 <?php foreach ($selected_columns as $col): ?>
@@ -198,7 +199,7 @@ $tutor_loads = $pdo->query("
                         </td>
                     <?php endforeach; ?>
                     <td>
-                        <a href="/index.php?page=student_profile&id=<?= urlencode($pt['student_id']) ?>">View Student</a>
+                        <a href="/index.php?page=students_profile&id=<?= urlencode($pt['student_id']) ?>">View Student</a>
                         <?php if ($pt['tutor_id']): ?>
                             | <a href="/index.php?page=staff_profile&id=<?= urlencode($pt['tutor_id']) ?>">View Tutor</a>
                         <?php endif; ?>
