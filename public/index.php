@@ -30,6 +30,8 @@ switch ($page) {
     case 'tutor_meetings':
     case 'attendance_admin':
     case 'assignments_search':
+    case 'assignments_edit':
+    case 'assignments_create':
         // Twrapped in layout
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));

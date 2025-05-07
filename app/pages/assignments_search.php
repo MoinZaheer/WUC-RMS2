@@ -5,6 +5,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (!empty($_SESSION['toast'])): ?>
+    <div class="toast">
+      <?= htmlspecialchars($_SESSION['toast']) ?>
+    </div>
+    <?php unset($_SESSION['toast']);
+endif;
+  
+
 // Filters
 $module_id = $_GET['module_id'] ?? '';
 $type = $_GET['type'] ?? '';
@@ -86,6 +94,10 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
 </form>
 
 <!-- table -->
+<p>
+  <a href="/index.php?page=assignments_create" class="button-primary">Add New Assignment</a>
+</p>
+
 <?php if (!empty($assignments)): ?>
     <table>
         <thead>
