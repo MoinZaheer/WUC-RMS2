@@ -73,9 +73,24 @@ document.addEventListener('DOMContentLoaded', function () {
   <?php endforeach; ?>
   baseParams.set('page', 'timetable_events');
 
+  function listViewEventContent(arg) {
+    const props = arg.event.extendedProps;
+    const title = document.createElement('div');
+    title.innerText = arg.event.title;
+
+    const meta = document.createElement('div');
+    meta.style.fontSize = '0.8em';
+    meta.style.marginTop = '4px';
+    meta.style.color = '#555';
+    meta.innerText = `Room: ${props.room_code ?? '—'} | Group: ${props.group_number ?? '—'}`;
+
+    return { domNodes: [title, meta] };
+  }
+
+
   const calendar = new FullCalendar.Calendar(calendarEl, {
     firstDay: 1,
-    initialView: 'dayGridMonth',
+    initialView: 'listWeek',
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
@@ -106,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
     },
     eventDidMount: function(info) {
-        
+        if (info.view.type.startsWith('list')) return;
 
         const start = new Date(info.event.start);
         const end = new Date(info.event.end);
@@ -120,9 +135,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const props = info.event.extendedProps;
 
         const tooltip = `${info.event.title}
-        ${formatTime(start)} – ${formatTime(end)}
-        Room: ${props.room_code}
-        Group: ${props.group_number ?? '—'}`;
+${formatTime(start)} – ${formatTime(end)}
+Room: ${props.room_code}
+Group: ${props.group_number ?? '—'}`;
 
         const tooltipEl = document.getElementById('fcTooltip');
         info.el.addEventListener('mouseenter', function(e) {
@@ -138,11 +153,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     },
     eventContent: function(arg) {
-        
+        const isList = arg.view.type.startsWith('list');
         const props = arg.event.extendedProps;
 
         const title = document.createElement('div');
         title.innerText = arg.event.title;
+
+        if (!isList) {
+            return { domNodes: [title] };
+        }
 
         const meta = document.createElement('div');
         meta.style.fontSize = '0.8em';
@@ -156,7 +175,9 @@ document.addEventListener('DOMContentLoaded', function () {
     height: 'auto'
   });
 
+  
+
+
   calendar.render();
 });
 </script>
-
