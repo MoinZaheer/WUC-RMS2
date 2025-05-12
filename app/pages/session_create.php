@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="alert-danger"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-<form method="post" action="/index.php?page=session_create">
+<form method="post" action="/index.php?page=session_create" id="sessionCreateForm">
 <table>
   <tr>
     <th>Module:</th>
@@ -78,9 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select name="module_id" required>
         <option value="">Select Module</option>
         <?php
-        $modules = $pdo->query("SELECT module_id, module_title FROM Modules");
+        $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code");
         foreach ($modules as $module) {
-            echo "<option value='{$module['module_id']}'>{$module['module_title']}</option>";
+            echo "<option value='{$module['module_id']}'>"
+               . htmlspecialchars("{$module['module_code']} - {$module['module_title']}")
+               . "</option>";
         }
         ?>
       </select>
@@ -93,9 +95,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select name="staff_id" required>
         <option value="">Select Staff</option>
         <?php
-        $staff = $pdo->query("SELECT staff_id, first_name, surname FROM Staff WHERE record_status = 'Live'");
+        $staff = $pdo->query("SELECT staff_id, first_name, surname, roles FROM Staff WHERE record_status = 'Live' ORDER BY surname");
         foreach ($staff as $s) {
-            echo "<option value='{$s['staff_id']}'>{$s['first_name']} {$s['surname']}</option>";
+            $label = "{$s['first_name']} {$s['surname']}";
+            if (!empty($s['roles'])) {
+                $label .= " (" . strtok($s['roles'], ',') . ")";
+            }
+            echo "<option value='{$s['staff_id']}'>" . htmlspecialchars($label) . "</option>";
         }
         ?>
       </select>
@@ -108,9 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select name="room_id" required>
         <option value="">Select Room</option>
         <?php
-        $rooms = $pdo->query("SELECT room_id, room_name FROM Rooms");
+        $rooms = $pdo->query("SELECT room_id, room_code, room_type, capacity FROM Rooms ORDER BY room_code");
         foreach ($rooms as $r) {
-            echo "<option value='{$r['room_id']}'>{$r['room_name']}</option>";
+            $label = "{$r['room_code']} - {$r['room_type']} ({$r['capacity']})";
+            echo "<option value='{$r['room_id']}'>" . htmlspecialchars($label) . "</option>";
         }
         ?>
       </select>
@@ -123,9 +130,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select name="group_id">
         <option value="">(Optional)</option>
         <?php
-        $groups = $pdo->query("SELECT group_id, group_name FROM StudentGroups");
+        $groups = $pdo->query("SELECT group_id, level, year FROM StudentGroups ORDER BY group_id");
         foreach ($groups as $g) {
-            echo "<option value='{$g['group_id']}'>{$g['group_name']}</option>";
+            $label = "Group {$g['group_id']} - Level {$g['level']}, Year {$g['year']}";
+            echo "<option value='{$g['group_id']}'>" . htmlspecialchars($label) . "</option>";
         }
         ?>
       </select>
@@ -162,8 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php
       $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
       foreach ($days as $day) {
-          $label = ucfirst($day);
-          echo "<label><input type='checkbox' name='repeat_days[]' value='$day'> $label</label> ";
+          echo "<label><input type='checkbox' name='repeat_days[]' value='$day'> " . ucfirst($day) . "</label> ";
       }
       ?>
     </td>
@@ -178,7 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <br>
 <button type="submit" class="button-primary">Create Session</button>
 <a href="/index.php?page=timetables_calendar" class="button-cancel">Cancel</a>
-
 </form>
 
 <script>
