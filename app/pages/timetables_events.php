@@ -25,11 +25,15 @@ $where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
 $sql = "
     SELECT t.timetable_id, t.date, t.start_time, t.end_time, t.type,
+           t.room_id, t.group_number,
+           r.room_code,
            m.module_code
     FROM Timetables t
     LEFT JOIN Modules m ON t.module_id = m.module_id
+    LEFT JOIN Rooms r ON t.room_id = r.room_id
     $where_sql
 ";
+
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -51,8 +55,13 @@ foreach ($sessions as $s) {
         'title' => $s['type'] . ': ' . ($s['module_code'] ?? 'Unknown'),
         'start' => $s['date'] . 'T' . $s['start_time'],
         'end' => $s['date'] . 'T' . $s['end_time'],
-        'color' => $typeColors[$s['type']] ?? '#7f8c8d'
+        'color' => $typeColors[$s['type']] ?? '#7f8c8d',
+        'extendedProps' => [
+            'room_code' => $s['room_code'] ?? '—',
+            'group_number' => $s['group_number'] ?? null
+        ]
     ];
+    
 }
 
 header('Content-Type: application/json');

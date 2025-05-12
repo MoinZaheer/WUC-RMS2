@@ -105,32 +105,36 @@ document.addEventListener('DOMContentLoaded', function () {
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
     },
     eventDidMount: function(info) {
-  const tooltipEl = document.getElementById('fcTooltip');
-  const start = new Date(info.event.start);
-  const end = new Date(info.event.end);
+        const start = new Date(info.event.start);
+        const end = new Date(info.event.end);
 
-  const formatTime = date => date.toLocaleTimeString('en-GB', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
+        const formatTime = date => date.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
 
-  const tooltipText = `${info.event.title}\n${formatTime(start)} – ${formatTime(end)}`;
+        const props = info.event.extendedProps;
 
-  info.el.addEventListener('mouseenter', function(e) {
-    tooltipEl.innerText = tooltipText;
-    tooltipEl.style.display = 'block';
-  });
+        const tooltip = `${info.event.title}
+        ${formatTime(start)} – ${formatTime(end)}
+        Room: ${props.room_code}
+        Group: ${props.group_number ?? '—'}`;
 
-  info.el.addEventListener('mousemove', function(e) {
-    tooltipEl.style.top = (e.pageY + 10) + 'px';
-    tooltipEl.style.left = (e.pageX + 10) + 'px';
-  });
+        const tooltipEl = document.getElementById('fcTooltip');
+        info.el.addEventListener('mouseenter', function(e) {
+            tooltipEl.innerText = tooltip;
+            tooltipEl.style.display = 'block';
+        });
+        info.el.addEventListener('mousemove', function(e) {
+            tooltipEl.style.top = (e.pageY + 10) + 'px';
+            tooltipEl.style.left = (e.pageX + 10) + 'px';
+        });
+        info.el.addEventListener('mouseleave', function() {
+            tooltipEl.style.display = 'none';
+        });
+    }
 
-  info.el.addEventListener('mouseleave', function() {
-    tooltipEl.style.display = 'none';
-  });
-}
 ,
     height: 'auto'
   });
