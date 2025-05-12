@@ -11,6 +11,10 @@ body, html {
   font-family: Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 a {
   color: #800066;
   text-decoration: none;
@@ -143,7 +147,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .page-content {
