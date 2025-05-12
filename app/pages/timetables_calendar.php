@@ -66,12 +66,11 @@ $type = $_GET['type'] ?? '';
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('calendar');
 
-  // Build a fresh query string WITHOUT page=
-  const calendarParams = new URLSearchParams();
+  const baseParams = new URLSearchParams();
   <?php foreach (['module_id', 'staff_id', 'group', 'type'] as $key): ?>
-    calendarParams.set('<?= $key ?>', '<?= $_GET[$key] ?? '' ?>');
+    baseParams.set('<?= $key ?>', '<?= $_GET[$key] ?? '' ?>');
   <?php endforeach; ?>
-  calendarParams.set('page', 'timetable_events');
+  baseParams.set('page', 'timetable_events');
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
@@ -80,16 +79,38 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'timeGridWeek,dayGridMonth'
     },
-    events: '/index.php?' + calendarParams.toString(),
+    slotLabelFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    },
+    dayHeaderFormat: {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short'
+    },
+    events: '/index.php?' + baseParams.toString(),
     eventClick: function(info) {
       const id = info.event.id;
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
     },
-    eventColor: '#3788d8',
+    eventDidMount: function(info) {
+      const start = new Date(info.event.start);
+      const end = new Date(info.event.end);
+
+      const formatTime = date => date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+
+      const tooltip = `${info.event.title}\n${formatTime(start)} – ${formatTime(end)}`;
+      info.el.setAttribute('title', tooltip);
+    },
     height: 'auto'
   });
 
   calendar.render();
 });
-
 </script>
+

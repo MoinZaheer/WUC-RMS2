@@ -35,6 +35,13 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $sessions = $stmt->fetchAll();
 
+$typeColors = [
+    'Lecture' => '#3788d8',   // blue
+    'Practical' => '#f39c12', // orange
+    'Exam' => '#e74c3c',      // red
+    'Event' => '#27ae60'      // green
+];
+
 $events = [];
 foreach ($sessions as $s) {
     if (!$s['date'] || !$s['start_time'] || !$s['end_time']) continue;
@@ -43,7 +50,8 @@ foreach ($sessions as $s) {
         'id' => $s['timetable_id'],
         'title' => $s['type'] . ': ' . ($s['module_code'] ?? 'Unknown'),
         'start' => $s['date'] . 'T' . $s['start_time'],
-        'end' => $s['date'] . 'T' . $s['end_time']
+        'end' => $s['date'] . 'T' . $s['end_time'],
+        'color' => $typeColors[$s['type']] ?? '#7f8c8d'
     ];
 }
 
