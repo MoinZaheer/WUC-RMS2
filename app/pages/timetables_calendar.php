@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 $staff = $pdo->query("SELECT staff_id, first_name, surname FROM Staff ORDER BY surname")->fetchAll();
-$groups = $pdo->query("SELECT DISTINCT group_number FROM Timetables WHERE group_number IS NOT NULL ORDER BY group_number")->fetchAll();
+$groups = $pdo->query("SELECT DISTINCT group_id FROM Timetables WHERE group_id IS NOT NULL ORDER BY group_id")->fetchAll();
 $type_options = ['Lecture', 'Practical', 'Exam', 'Event'];
 
 $module_id = $_GET['module_id'] ?? '';
@@ -39,8 +39,8 @@ $type = $_GET['type'] ?? '';
     <select name="group">
         <option value="">All Groups</option>
         <?php foreach ($groups as $g): ?>
-            <option value="<?= $g['group_number'] ?>" <?= $g['group_number'] == $group ? 'selected' : '' ?>>
-                Group <?= htmlspecialchars($g['group_number']) ?>
+            <option value="<?= $g['group_id'] ?>" <?= $g['group_id'] == $group ? 'selected' : '' ?>>
+                Group <?= htmlspecialchars($g['group_id']) ?>
             </option>
         <?php endforeach; ?>
     </select>
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const tooltip = `${info.event.title}
         ${formatTime(start)} – ${formatTime(end)}
         Room: ${props.room_code}
-        Group: ${props.group_number ?? '—'}`;
+        Group: ${props.group_id ?? '—'}`;
 
         const tooltipEl = document.getElementById('fcTooltip');
         info.el.addEventListener('mouseenter', function(e) {
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //     meta.style.fontSize = '0.8em';
     //     meta.style.marginTop = '4px';
     //     meta.style.color = '#555';
-    //     meta.innerText = `Room: ${props.room_code ?? '—'} | Group: ${props.group_number ?? '—'}`;
+    //     meta.innerText = `Room: ${props.room_code ?? '—'} | Group: ${props.group_id ?? '—'}`;
 
     //     return { domNodes: [title, meta] };
     // },

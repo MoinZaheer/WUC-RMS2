@@ -13,7 +13,7 @@ if (!empty($_GET['staff_id'])) {
     $params['staff_id'] = $_GET['staff_id'];
 }
 if (!empty($_GET['group'])) {
-    $conditions[] = "t.group_number = :group";
+    $conditions[] = "t.group_id = :group";
     $params['group'] = $_GET['group'];
 }
 if (!empty($_GET['type'])) {
@@ -25,7 +25,7 @@ $where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
 $sql = "
     SELECT t.timetable_id, t.date, t.start_time, t.end_time, t.type,
-           t.room_id, t.group_number,
+           t.room_id, t.group_id,
            r.room_code,
            m.module_code
     FROM Timetables t
@@ -58,7 +58,7 @@ foreach ($sessions as $s) {
         'color' => $typeColors[$s['type']] ?? '#7f8c8d',
         'extendedProps' => [
             'room_code' => $s['room_code'] ?? '—',
-            'group_number' => $s['group_number'] ?? null
+            'group_id' => $s['group_id'] ?? null
         ]
     ];
     
