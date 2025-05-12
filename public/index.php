@@ -7,6 +7,12 @@ if (session_status() === PHP_SESSION_NONE) {
 // DB connection
 require_once __DIR__ . '/../app/includes/db.php';
 
+if (isset($_GET['page']) && $_GET['page'] === 'timetable_events') {
+    require_once __DIR__ . '/../app/pages/timetables_events.php';
+    exit;
+}
+
+
 $page = $_GET['page'] ?? 'login';
 
 switch ($page) {
@@ -34,7 +40,6 @@ switch ($page) {
     case 'assignments_create':
     case 'grades':
     case 'timetables_calendar':
-    case 'timetables_api':
         // Twrapped in layout
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));

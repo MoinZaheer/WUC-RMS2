@@ -66,7 +66,13 @@ $type = $_GET['type'] ?? '';
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('calendar');
 
-  const params = new URLSearchParams(<?= json_encode($_GET) ?>);
+  // Build a fresh query string WITHOUT page=
+  const calendarParams = new URLSearchParams();
+  <?php foreach (['module_id', 'staff_id', 'group', 'type'] as $key): ?>
+    calendarParams.set('<?= $key ?>', '<?= $_GET[$key] ?? '' ?>');
+  <?php endforeach; ?>
+  calendarParams.set('page', 'timetable_events');
+
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
     headerToolbar: {
@@ -74,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'timeGridWeek,dayGridMonth'
     },
-    events: '/app/api/timetables_events.php?' + params.toString(),
+    events: '/index.php?' + calendarParams.toString(),
     eventClick: function(info) {
       const id = info.event.id;
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
@@ -85,4 +91,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
   calendar.render();
 });
+
 </script>
