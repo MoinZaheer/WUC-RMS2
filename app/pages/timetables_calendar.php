@@ -74,11 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
   baseParams.set('page', 'timetable_events');
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
+    firstDay: 1,
     initialView: 'dayGridMonth',
     headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'timeGridWeek,dayGridMonth'
+        left: 'prev,next today',
+        center: 'title',
+        right: 'timeGridWeek,dayGridMonth,listWeek'
     },
     slotLabelFormat: {
       hour: '2-digit',
@@ -105,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
     },
     eventDidMount: function(info) {
+        
+
         const start = new Date(info.event.start);
         const end = new Date(info.event.end);
 
@@ -133,9 +136,23 @@ document.addEventListener('DOMContentLoaded', function () {
         info.el.addEventListener('mouseleave', function() {
             tooltipEl.style.display = 'none';
         });
-    }
+    },
+    eventContent: function(arg) {
+        
+        const props = arg.event.extendedProps;
 
-,
+        const title = document.createElement('div');
+        title.innerText = arg.event.title;
+
+        const meta = document.createElement('div');
+        meta.style.fontSize = '0.8em';
+        meta.style.marginTop = '4px';
+        meta.style.color = '#555';
+        meta.innerText = `Room: ${props.room_code ?? '—'} | Group: ${props.group_number ?? '—'}`;
+
+        return { domNodes: [title, meta] };
+    },
+
     height: 'auto'
   });
 
