@@ -25,7 +25,7 @@ $where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
 $sql = "
     SELECT t.timetable_id, t.date, t.start_time, t.end_time, t.type,
-           m.module_code, m.module_title
+           m.module_code
     FROM Timetables t
     LEFT JOIN Modules m ON t.module_id = m.module_id
     $where_sql
@@ -37,6 +37,8 @@ $sessions = $stmt->fetchAll();
 
 $events = [];
 foreach ($sessions as $s) {
+    if (!$s['date'] || !$s['start_time'] || !$s['end_time']) continue;
+
     $events[] = [
         'id' => $s['timetable_id'],
         'title' => $s['type'] . ': ' . ($s['module_code'] ?? 'Unknown'),
@@ -47,4 +49,4 @@ foreach ($sessions as $s) {
 
 header('Content-Type: application/json');
 echo json_encode($events);
-?>
+exit;

@@ -2,14 +2,11 @@
 require_once __DIR__ . '/../includes/db.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Fetch dropdown data
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 $staff = $pdo->query("SELECT staff_id, first_name, surname FROM Staff ORDER BY surname")->fetchAll();
 $groups = $pdo->query("SELECT DISTINCT group_number FROM Timetables WHERE group_number IS NOT NULL ORDER BY group_number")->fetchAll();
-
 $type_options = ['Lecture', 'Practical', 'Exam', 'Event'];
 
-// Filter values
 $module_id = $_GET['module_id'] ?? '';
 $staff_id = $_GET['staff_id'] ?? '';
 $group = $_GET['group'] ?? '';
@@ -68,6 +65,8 @@ $type = $_GET['type'] ?? '';
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const calendarEl = document.getElementById('calendar');
+
+  const params = new URLSearchParams(<?= json_encode($_GET) ?>);
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'timeGridWeek',
     headerToolbar: {
@@ -75,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
       center: 'title',
       right: 'timeGridWeek,dayGridMonth'
     },
-    events: '/timetables_api.php' + new URLSearchParams(<?= json_encode($_GET) ?>).toString(),
+    events: '/app/api/timetables_events.php?' + params.toString(),
     eventClick: function(info) {
       const id = info.event.id;
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
@@ -87,4 +86,3 @@ document.addEventListener('DOMContentLoaded', function () {
   calendar.render();
 });
 </script>
-
