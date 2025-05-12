@@ -57,6 +57,7 @@ $type = $_GET['type'] ?? '';
 </form>
 
 <div id="calendar"></div>
+<div id="fcTooltip" class="fc-custom-tooltip"></div>
 
 <!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
   baseParams.set('page', 'timetable_events');
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'timeGridWeek',
+    initialView: 'dayGridMonth',
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
@@ -84,10 +85,19 @@ document.addEventListener('DOMContentLoaded', function () {
       minute: '2-digit',
       hour12: true
     },
-    dayHeaderFormat: {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short'
+    views: {
+        timeGridWeek: {
+            dayHeaderFormat: {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short'
+            }
+        },
+        dayGridMonth: {
+            dayHeaderFormat: {
+            weekday: 'short'
+            }
+        }
     },
     events: '/index.php?' + baseParams.toString(),
     eventClick: function(info) {
@@ -95,18 +105,33 @@ document.addEventListener('DOMContentLoaded', function () {
       window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
     },
     eventDidMount: function(info) {
-      const start = new Date(info.event.start);
-      const end = new Date(info.event.end);
+  const tooltipEl = document.getElementById('fcTooltip');
+  const start = new Date(info.event.start);
+  const end = new Date(info.event.end);
 
-      const formatTime = date => date.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
+  const formatTime = date => date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
 
-      const tooltip = `${info.event.title}\n${formatTime(start)} – ${formatTime(end)}`;
-      info.el.setAttribute('title', tooltip);
-    },
+  const tooltipText = `${info.event.title}\n${formatTime(start)} – ${formatTime(end)}`;
+
+  info.el.addEventListener('mouseenter', function(e) {
+    tooltipEl.innerText = tooltipText;
+    tooltipEl.style.display = 'block';
+  });
+
+  info.el.addEventListener('mousemove', function(e) {
+    tooltipEl.style.top = (e.pageY + 10) + 'px';
+    tooltipEl.style.left = (e.pageX + 10) + 'px';
+  });
+
+  info.el.addEventListener('mouseleave', function() {
+    tooltipEl.style.display = 'none';
+  });
+}
+,
     height: 'auto'
   });
 
