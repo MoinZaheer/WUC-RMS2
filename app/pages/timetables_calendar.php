@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     firstDay: 1,
-    initialView: 'dayGridMonth',
+    initialView: 'listWeek',
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
@@ -103,10 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     },
     events: '/index.php?' + baseParams.toString(),
-    eventClick: function(info) {
-      const id = info.event.id;
-      window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
-    },
+
+    // currently turning off eventClick
+    
+    // eventClick: function(info) {
+    //   const id = info.event.id;
+    //   window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
+    // },
     eventDidMount: function(info) {
 
         const start = new Date(info.event.start);
