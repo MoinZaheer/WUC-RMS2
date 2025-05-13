@@ -163,15 +163,15 @@ $tutor = $tutorStmt->fetch();
 
   <tr><th>Course Code:</th><td>
     <?php if ($editMode): ?>
-      <select name="course_code" class="form-select" required>
+      <select name="course_code" class="form-select select2" required>
         <option value="">-- Select Course --</option>
         <?php
           $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
           foreach ($courses as $course) {
-            $selected = ($student['course_code'] ?? '') === $course['course_code'] ? 'selected' : '';
-            echo '<option value="' . htmlspecialchars($course['course_code']) . '" ' . $selected . '>'
-                 . htmlspecialchars($course['course_code'] . ' - ' . $course['course_name'])
-                 . '</option>';
+        $selected = ($student['course_code'] ?? '') === $course['course_code'] ? 'selected' : '';
+        echo '<option value="' . htmlspecialchars($course['course_code']) . '" ' . $selected . '>'
+             . htmlspecialchars($course['course_code'] . ' - ' . $course['course_name'])
+             . '</option>';
         }        
         ?>
       </select>
@@ -197,3 +197,20 @@ $tutor = $tutorStmt->fetch();
 <?php else: ?>
   <p><a class="button-primary" href="/index.php?page=students_profile&id=<?= urlencode($student_id) ?>&edit=1">Edit Student</a></p>
 <?php endif; ?>
+
+
+<!-- for the select2 dropdowns -->
+
+  <!-- select2 for autocomplete Dropdowns -->
+
+  <!-- Select2 CSS -->
+
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    $('.select2').select2();
+  });
+</script>

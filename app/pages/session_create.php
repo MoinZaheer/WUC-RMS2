@@ -156,6 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </td>
   </tr>
   
+  <tr><th>Date:</th><td><input type="date" name="date" required></td></tr>
+  
   <tr>
     <th>Recurring?</th>
     <td>
@@ -181,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <td><input type="date" name="repeat_until"></td>
   </tr>
 
-  <tr><th>Date:</th><td><input type="date" name="date" required></td></tr>
+  
   <tr><th>Start Time:</th><td><input type="time" name="start_time" required></td></tr>
   <tr><th>End Time:</th><td><input type="time" name="end_time" required></td></tr>
 

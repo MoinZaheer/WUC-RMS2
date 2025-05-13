@@ -113,7 +113,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 
   <input type="text" name="search" placeholder="Search by name or ID" value="<?= htmlspecialchars($search) ?>">
 
-  <select name="course">
+  <select name="course" class="select2">
     <option value="">All Courses</option>
     <?php foreach ($courses as $c): ?>
       <option value="<?= $c['course_code'] ?>" <?= $course === $c['course_code'] ? 'selected' : '' ?>>
@@ -122,7 +122,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
     <?php endforeach; ?>
   </select>
 
-  <select name="tutor">
+  <select name="tutor" class="select2">
     <option value="">All Tutors</option>
     <?php foreach ($tutors as $t): ?>
       <option value="<?= $t['staff_id'] ?>" <?= $tutor === $t['staff_id'] ? 'selected' : '' ?>>
@@ -217,10 +217,27 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
   <p>No students found.</p>
 <?php endif; ?>
 
-<!-- Tiny JS to handle dropdown -->
+<!-- JS to handle dropdown -->
 <script>
 function toggleColumnsDropdown() {
     var dropdown = document.getElementById('columnsDropdown');
     dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
 }
+</script>
+
+
+<!-- for the select2 dropdowns -->
+
+  <!-- select2 for autocomplete Dropdowns -->
+
+  <!-- Select2 CSS -->
+
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    $('.select2').select2();
+  });
 </script>
