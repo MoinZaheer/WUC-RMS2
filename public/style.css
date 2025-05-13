@@ -163,6 +163,7 @@ a:hover {
 
 form {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -337,3 +338,18 @@ table th, table td {
   white-space: pre-line;
   display: none;
 }
+
+.fc-col-header-cell, .fc-daygrid-day-frame {
+  padding-right: 4px;
+}
+
+
+
+/* Select2 Dropdown Styling */
+
+
+/* Core styling for all Select2 single selects */
+.select2-container .select2-selection--single .select2-selection__rendered {
+    width: fit-content;
+}
+

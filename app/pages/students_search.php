@@ -131,7 +131,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
     <?php endforeach; ?>
   </select>
 
-  <select name="status">
+  <select name="status" class="select2">
     <option value="">All Statuses</option>
     <?php foreach (['Provisional', 'Live', 'Dormant'] as $stat): ?>
       <option value="<?= $stat ?>" <?= $status === $stat ? 'selected' : '' ?>><?= $stat ?></option>
