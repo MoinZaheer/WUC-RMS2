@@ -19,6 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $start_date = $_POST['date'];
     $end_date = $is_recurring && !empty($_POST['repeat_until']) ? $_POST['repeat_until'] : $start_date;
 
+    
+    // to generate recurring session ID if needed
+    $recurring_session_id = $is_recurring ? bin2hex(random_bytes(16)) : null;
+
     try {
         $pdo->beginTransaction();
 
@@ -36,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     INSERT INTO Timetables (
                         module_id, staff_id, room_id, date, start_time, end_time, type, group_id
                     ) VALUES (
-                        :module_id, :staff_id, :room_id, :date, :start_time, :end_time, :type, :group_id
+                        :module_id, :staff_id, :room_id, :date, :start_time, :end_time, :type, :group_id, :recurring_session_id
                     )
                 ");
                 $stmt->execute([
@@ -47,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'start_time' => $start_time,
                     'end_time' => $end_time,
                     'type' => $type,
-                    'group_id' => $group_id
+                    'group_id' => $group_id,
+                    'recurring_session_id' => $recurring_session_id
                 ]);
                 $count++;
             }
@@ -72,6 +77,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <form method="post" action="/index.php?page=session_create" id="sessionCreateForm">
 <table>
+  <tr>
+    <th>Type:</th>
+    <td>
+      <select name="type" required>
+        <option value="Lecture">Lecture</option>
+        <option value="Practical">Practical</option>
+        <option value="Exam">Exam</option>
+        <option value="Event">Event</option>
+      </select>
+    </td>
+  </tr>
+
   <tr>
     <th>Module:</th>
     <td>
@@ -108,6 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </td>
   </tr>
 
+
+
   <tr>
     <th>Room:</th>
     <td>
@@ -139,23 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </select>
     </td>
   </tr>
-
-  <tr><th>Date:</th><td><input type="date" name="date" required></td></tr>
-  <tr><th>Start Time:</th><td><input type="time" name="start_time" required></td></tr>
-  <tr><th>End Time:</th><td><input type="time" name="end_time" required></td></tr>
-
-  <tr>
-    <th>Type:</th>
-    <td>
-      <select name="type" required>
-        <option value="Lecture">Lecture</option>
-        <option value="Practical">Practical</option>
-        <option value="Exam">Exam</option>
-        <option value="Event">Event</option>
-      </select>
-    </td>
-  </tr>
-
+  
   <tr>
     <th>Recurring?</th>
     <td>
@@ -180,6 +183,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <th>Repeat Until:</th>
     <td><input type="date" name="repeat_until"></td>
   </tr>
+
+  <tr><th>Date:</th><td><input type="date" name="date" required></td></tr>
+  <tr><th>Start Time:</th><td><input type="time" name="start_time" required></td></tr>
+  <tr><th>End Time:</th><td><input type="time" name="end_time" required></td></tr>
+
+  
+
+  
 </table>
 
 <br>
