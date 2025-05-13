@@ -112,12 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <select name="staff_id" required>
         <option value="">Select Staff</option>
         <?php
-        $staff = $pdo->query("SELECT staff_id, first_name, surname, roles FROM Staff WHERE record_status = 'Live' ORDER BY surname");
+        $staff = $pdo->query("SELECT staff_id, first_name, surname, roles FROM Staff WHERE record_status = 'Live' AND roles LIKE '%ACADEMIC%' ORDER BY surname");
         foreach ($staff as $s) {
             $label = "{$s['first_name']} {$s['surname']}";
-            if (!empty($s['roles'])) {
-                $label .= " (" . strtok($s['roles'], ',') . ")";
-            }
             echo "<option value='{$s['staff_id']}'>" . htmlspecialchars($label) . "</option>";
         }
         ?>
