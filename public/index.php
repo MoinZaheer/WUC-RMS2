@@ -41,6 +41,7 @@ switch ($page) {
     case 'grades':
     case 'timetables_calendar':
     case 'session_create':
+    case 'session_profile':
         // Twrapped in layout
         $contentPath = __DIR__ . '/../app/pages/' . $page . '.php';
         $pageTitle = ucfirst(str_replace('_', ' ', $page));

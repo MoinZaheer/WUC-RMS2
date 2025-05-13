@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // currently turning off eventClick
     
-    // eventClick: function(info) {
-    //   const id = info.event.id;
-    //   window.open('/index.php?page=session_profile&id=' + encodeURIComponent(id), '_blank');
-    // },
+    eventClick: function(info) {
+      const id = info.event.id;
+      window.location.href = '/index.php?page=session_profile&id=' + encodeURIComponent(id);
+    },
     eventDidMount: function(info) {
 
         const start = new Date(info.event.start);

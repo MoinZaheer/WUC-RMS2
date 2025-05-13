@@ -84,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <tr><th>Roles:</th><td>
     <select name="roles" id="roles" required>
-      <option value="Academic">Academic</option>
-      <option value="Admin">Admin</option>
+      <option value="ACADEMIC">Academic</option>
+      <option value="ADMIN">Admin</option>
     </select>
   </td></tr>
 
