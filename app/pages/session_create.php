@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$is_recurring || in_array($day, $days_of_week)) {
                 $stmt = $pdo->prepare("
                     INSERT INTO Timetables (
-                        module_id, staff_id, room_id, date, start_time, end_time, type, group_id
+                        module_id, staff_id, room_id, date, start_time, end_time, type, group_id, recurring_session_id
                     ) VALUES (
                         :module_id, :staff_id, :room_id, :date, :start_time, :end_time, :type, :group_id, :recurring_session_id
                     )
