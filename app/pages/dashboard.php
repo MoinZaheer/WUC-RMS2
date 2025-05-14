@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../includes/check_auth.php';
-require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/layout.php';
 
 // Live statistics
@@ -22,6 +21,12 @@ $tasks = [
   ["task" => "Review new student applications", "due" => "2024-05-15"],
   ["task" => "Schedule June timetable", "due" => "2024-05-20"]
 ];
+
+// Sample timetable list view (mocked from recent sessions)
+$timetableSessions = [
+  ["module" => "C1001", "date" => "2024-05-13", "start" => "10:00", "end" => "12:00", "type" => "Lecture"],
+  ["module" => "C1003", "date" => "2024-05-13", "start" => "13:00", "end" => "14:30", "type" => "Practical"]
+];
 ?>
 
 <div class="page-content">
@@ -37,7 +42,7 @@ $tasks = [
   <div class="widgets-row">
     <!-- Announcements -->
     <div class="widget">
-      <h3>📢 Announcements <a href="#" class="add-btn" title="Add Announcement">+</a></h3>
+      <h3>📢 Announcements</h3>
       <ul>
         <?php foreach ($announcements as $a): ?>
           <li><strong><?= htmlspecialchars($a['title']) ?>:</strong> <?= htmlspecialchars($a['message']) ?><br><small><?= $a['created_at'] ?> | <?= ucfirst($a['audience']) ?></small></li>
@@ -47,7 +52,7 @@ $tasks = [
 
     <!-- Task List -->
     <div class="widget">
-      <h3>✅ Task List <a href="#" class="add-btn" title="Add Task">+</a></h3>
+      <h3>✅ Task List</h3>
       <ul>
         <?php foreach ($tasks as $task): ?>
           <li><?= htmlspecialchars($task['task']) ?><br><small>Due: <?= $task['due'] ?></small></li>
@@ -55,30 +60,17 @@ $tasks = [
       </ul>
     </div>
 
-    <!-- Course Calendar (List View Placeholder) -->
+    <!-- Course Calendar (list view mock) -->
     <div class="widget">
       <h3>📅 Course Calendar (This Week)</h3>
-      <div id="calendar-list"></div>
+      <ul>
+        <?php foreach ($timetableSessions as $s): ?>
+          <li><strong><?= $s['module'] ?>:</strong> <?= $s['type'] ?> on <?= $s['date'] ?> (<?= $s['start'] ?> - <?= $s['end'] ?>)</li>
+        <?php endforeach; ?>
+      </ul>
     </div>
   </div>
 </div>
-
-<!-- Include FullCalendar -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar-list');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'listWeek',
-      headerToolbar: false,
-      height: 'auto',
-      events: '/events/timetables_events.php', // Replace with your event feed URL
-    });
-    calendar.render();
-  });
-</script>
 
 <style>
   .stats-row {
@@ -110,12 +102,5 @@ $tasks = [
   }
   .widget ul li {
     margin-bottom: 0.75rem;
-  }
-  .add-btn {
-    float: right;
-    font-weight: bold;
-    font-size: 1.2rem;
-    text-decoration: none;
-    margin-top: -4px;
   }
 </style>
