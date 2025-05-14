@@ -88,6 +88,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <form method="post" action="/index.php?page=students_create" id="studentCreateForm">
 
 <table>
+
+<tr><th>Record Status:</th><td>
+    <select name="record_status" id="recordStatus" required>
+      <option value="Provisional">Provisional</option>
+      <option value="Live">Live</option>
+      <option value="Dormant">Dormant</option>
+    </select>
+  </td></tr>
+
   <tr><th>Student ID:</th><td><input type="text" name="student_id" required></td></tr>
 
   <tr><th>First Name:</th><td><input type="text" name="first_name" required></td></tr>
@@ -113,13 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <tr><th>Entry Qualifications:</th><td><textarea name="entry_qualifications"></textarea></td></tr>
 
-  <tr><th>Record Status:</th><td>
-    <select name="record_status" id="recordStatus" required>
-      <option value="Provisional">Provisional</option>
-      <option value="Live">Live</option>
-      <option value="Dormant">Dormant</option>
-    </select>
-  </td></tr>
 
   <tr><th>Dormancy Reason:</th><td>
     <select name="dormancy_reason" id="dormancyReason" disabled>
@@ -131,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </td></tr>
 
   <tr><th>Course Code:</th><td>
-    <select name="course_code" required>
+    <select name="course_code" class="select2" required>
       <?php foreach ($courses as $c): ?>
         <option value="<?= htmlspecialchars($c['course_code']) ?>">
           <?= htmlspecialchars($c['course_code']) ?> - <?= htmlspecialchars($c['course_name']) ?>
@@ -148,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </form>
 
-<!-- Only enable Dormancy Reason if status is Dormant -->
+<!-- only enable dormancy reason if status is Dormant -->
 <script>
 document.getElementById('recordStatus').addEventListener('change', function() {
     const dormancyReason = document.getElementById('dormancyReason');

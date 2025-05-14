@@ -41,7 +41,7 @@ $pageTitle = $pageTitle ?? ucfirst(str_replace('_', ' ', $_GET['page'] ?? 'Dashb
       </div>
       <div class="user-info">
         <span>Welcome, <?= ucfirst($role) ?></span>
-        <a href="/index.php?page=logout">Logout</a>
+        <a href="/index.php">Logout</a>
       </div>
     </header>
 
@@ -69,6 +69,19 @@ $pageTitle = $pageTitle ?? ucfirst(str_replace('_', ' ', $_GET['page'] ?? 'Dashb
   document.addEventListener('DOMContentLoaded', function () {
     $('.select2').select2();
   });
+
+  $(document).ready(function () {
+  $('.select2').select2({
+    width: 'resolve' // auto-fit width
+  });
+});
+
+// Focus the search input when dropdown opens
+$(document).on('select2:open', () => {
+  document.querySelector('.select2-container--open .select2-search__field')?.focus();
+});
+
+
 </script>
 
 </body>
