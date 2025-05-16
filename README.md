@@ -1,5 +1,7 @@
 Instructions to Run the RMS:
 
+Please make sure PHP is installed before running the RMS
+
 Download and extract the the Zip file
 
 Open the the WUC RMS folder in file explorer
