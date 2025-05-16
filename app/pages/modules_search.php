@@ -91,14 +91,14 @@ $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll
 
     <input type="text" name="search" placeholder="Search by Code or Title" value="<?= htmlspecialchars($search) ?>">
 
-    <select name="level">
+    <select name="level" class="select2">
         <option value="">All Levels</option>
         <?php for ($lvl = 3; $lvl <= 7; $lvl++): ?>
             <option value="<?= $lvl ?>" <?= $level == $lvl ? 'selected' : '' ?>>Level <?= $lvl ?></option>
         <?php endfor; ?>
     </select>
 
-    <select name="course">
+    <select name="course" class="select2">
         <option value="">All Courses</option>
         <?php foreach ($courses as $c): ?>
             <option value="<?= $c['course_code'] ?>" <?= $course === $c['course_code'] ? 'selected' : '' ?>>

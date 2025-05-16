@@ -43,38 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             )
         ");
 
-        // Assign a personal tutor automatically
-        $tutorQuery = "
-            SELECT s.staff_id, COUNT(pt.student_id) AS tutee_count
-            FROM Staff s
-            LEFT JOIN PersonalTutors pt ON s.staff_id = pt.tutor_id
-            WHERE s.role LIKE '%Personal tutor%' 
-              AND s.record_status = 'Live'
-            GROUP BY s.staff_id
-            HAVING tutee_count < 50
-            ORDER BY tutee_count ASC
-            LIMIT 1
-        ";
-        $tutorStmt = $pdo->prepare($tutorQuery);
-        $tutorStmt->execute();
-        $availableTutor = $tutorStmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($availableTutor) {
-            $assignedTutorId = $availableTutor['staff_id'];
-
-            // Assign this tutor to the newly created student
-            $assignQuery = "INSERT INTO PersonalTutors (student_id, tutor_id) VALUES (:student_id, :tutor_id)";
-            $assignStmt = $pdo->prepare($assignQuery);
-            $assignStmt->execute([
-                ':student_id' => $student_id,
-                ':tutor_id' => $assignedTutorId
-            ]);
-        } else {
-            // Optional: Log or display a message if no eligible tutor found
-            echo "<div class='toast'>No available personal tutor (limit reached).</div>";
-        }
-
-
         $stmt->execute([
             'student_id' => $student_id,
             'first_name' => $first_name,

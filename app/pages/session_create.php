@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr>
     <th>Type:</th>
     <td>
-      <select name="type" required>
+      <select name="type" class="select2" required>
         <option value="Lecture">Lecture</option>
         <option value="Practical">Practical</option>
         <option value="Exam">Exam</option>
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr>
     <th>Module:</th>
     <td>
-      <select name="module_id" required>
+      <select name="module_id" class="select2" required>
         <option value="">Select Module</option>
         <?php
         $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code");
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr>
     <th>Staff:</th>
     <td>
-      <select name="staff_id" required>
+      <select name="staff_id"  class="select2" required>
         <option value="">Select Staff</option>
         <?php
         $staff = $pdo->query("SELECT staff_id, first_name, surname, roles FROM Staff WHERE record_status = 'Live' AND roles LIKE '%ACADEMIC%' ORDER BY surname");
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr>
     <th>Room:</th>
     <td>
-      <select name="room_id" required>
+      <select name="room_id" class="select2" required>
         <option value="">Select Room</option>
         <?php
         $rooms = $pdo->query("SELECT room_id, room_code, room_type, capacity FROM Rooms ORDER BY room_code");
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr>
     <th>Group:</th>
     <td>
-      <select name="group_id">
+      <select name="group_id" class="select2">
         <option value="">(Optional)</option>
         <?php
         $groups = $pdo->query("SELECT group_id, level, year FROM StudentGroups ORDER BY group_id");

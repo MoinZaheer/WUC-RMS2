@@ -42,7 +42,7 @@ $timetableSessions = [
   <div class="widgets-row">
     <!-- Announcements -->
     <div class="widget">
-      <h3>📢 Announcements</h3>
+      <h3>Announcements</h3>
       <ul>
         <?php foreach ($announcements as $a): ?>
           <li><strong><?= htmlspecialchars($a['title']) ?>:</strong> <?= htmlspecialchars($a['message']) ?><br><small><?= $a['created_at'] ?> | <?= ucfirst($a['audience']) ?></small></li>
@@ -52,7 +52,7 @@ $timetableSessions = [
 
     <!-- Task List -->
     <div class="widget">
-      <h3>✅ Task List</h3>
+      <h3>Task List</h3>
       <ul>
         <?php foreach ($tasks as $task): ?>
           <li><?= htmlspecialchars($task['task']) ?><br><small>Due: <?= $task['due'] ?></small></li>
@@ -62,7 +62,7 @@ $timetableSessions = [
 
     <!-- Course Calendar (list view mock) -->
     <div class="widget">
-      <h3>📅 Course Calendar (This Week)</h3>
+      <h3>Course Calendar (This Week)</h3>
       <ul>
         <?php foreach ($timetableSessions as $s): ?>
           <li><strong><?= $s['module'] ?>:</strong> <?= $s['type'] ?> on <?= $s['date'] ?> (<?= $s['start'] ?> - <?= $s['end'] ?>)</li>

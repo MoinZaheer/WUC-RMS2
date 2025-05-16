@@ -92,7 +92,7 @@ try {
 
   <input type="text" name="search" placeholder="Search by ID or Name" value="<?= htmlspecialchars($search) ?>">
 
-  <select name="status">
+  <select name="status" class="select2">
     <option value="">All Statuses</option>
     <?php foreach (['Live', 'Dormant'] as $stat): ?>
       <option value="<?= $stat ?>" <?= $status === $stat ? 'selected' : '' ?>><?= $stat ?></option>

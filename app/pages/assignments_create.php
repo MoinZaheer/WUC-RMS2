@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 ?>
 
-<h2>Create New Assignment</h2>
+<h2>Create New Assessment</h2>
 
 <!-- Toast -->
 <?php if (!empty($_SESSION['toast'])): ?>
@@ -55,7 +55,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
   </label><br><br>
 
   <label>Type:
-    <select name="type" required>
+    <select name="type" class="select2" required>
       <?php foreach (['Ass1', 'Ass2', 'Exam'] as $t): ?>
         <option value="<?= $t ?>"><?= $t ?></option>
       <?php endforeach; ?>
@@ -71,7 +71,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
   </label><br><br>
 
   <label>Module:
-    <select name="module_id" required>
+    <select name="module_id" class="select2" required>
       <option value="">Select Module</option>
       <?php foreach ($modules as $mod): ?>
         <option value="<?= $mod['module_id'] ?>">

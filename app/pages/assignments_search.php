@@ -64,7 +64,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
 <form method="get" action="/index.php" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
     <input type="hidden" name="page" value="assignments_search">
 
-    <select name="module_id">
+    <select name="module_id" class="select2">
         <option value="">All Modules</option>
         <?php foreach ($modules as $mod): ?>
             <option value="<?= $mod['module_id'] ?>" <?= $mod['module_id'] == $module_id ? 'selected' : '' ?>>
@@ -73,7 +73,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
         <?php endforeach; ?>
     </select>
 
-    <select name="type">
+    <select name="type" class="select2">
         <option value="">All Types</option>
         <?php foreach (['Ass1', 'Ass2', 'Exam'] as $t): ?>
             <option value="<?= $t ?>" <?= $type === $t ? 'selected' : '' ?>><?= $t ?></option>
@@ -95,7 +95,7 @@ $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules
 
 <!-- table -->
 <p>
-  <a href="/index.php?page=assignments_create" class="button-primary">Add New Assignment</a>
+  <a href="/index.php?page=assignments_create" class="button-primary">Add New Assessment</a>
 </p>
 
 <?php if (!empty($assignments)): ?>

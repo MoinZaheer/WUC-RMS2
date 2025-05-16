@@ -66,8 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <form method="post" action="/index.php?page=staff_create" id="staffCreateForm">
 
 <table>
+
   <tr><th>Staff ID:</th><td><input type="text" name="staff_id" required></td></tr>
 
+  <tr><th>Record Status:</th><td>
+    <select name="record_status" required>
+      <option value="Live">Live</option>
+      <option value="Dormant">Dormant</option>
+    </select>
+  </td></tr>
+  
   <tr><th>First Name:</th><td><input type="text" name="first_name" required></td></tr>
   <tr><th>Middle Name:</th><td><input type="text" name="middle_name"></td></tr>
   <tr><th>Surname:</th><td><input type="text" name="surname" required></td></tr>
@@ -93,12 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <textarea name="specialist_subjects" id="specialistSubjects" placeholder="(For Academic Staff only)"></textarea>
   </td></tr>
 
-  <tr><th>Record Status:</th><td>
-    <select name="record_status" required>
-      <option value="Live">Live</option>
-      <option value="Dormant">Dormant</option>
-    </select>
-  </td></tr>
+  
 </table>
 
 <br>

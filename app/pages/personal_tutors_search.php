@@ -102,7 +102,7 @@ $tutor_loads = $pdo->query("
 
     <input type="text" name="search" placeholder="Search by Student ID or Tutor ID" value="<?= htmlspecialchars($search) ?>" style="flex: 1 0 250px; min-width: 250px;">
 
-    <select name="tutor">
+    <select name="tutor" class="select2">
         <option value="">All Tutors</option>
         <?php foreach ($tutors as $t): ?>
             <option value="<?= $t['staff_id'] ?>" <?= $tutor === $t['staff_id'] ? 'selected' : '' ?>>
@@ -111,7 +111,7 @@ $tutor_loads = $pdo->query("
         <?php endforeach; ?>
     </select>
 
-    <select name="course">
+    <select name="course" class="select2">
         <option value="">All Courses</option>
         <?php foreach ($courses as $c): ?>
             <option value="<?= $c['course_code'] ?>" <?= $course === $c['course_code'] ? 'selected' : '' ?>>

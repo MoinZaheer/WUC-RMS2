@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <tr><th>Credits:</th><td><input type="number" name="credits" min="10" max="120" required></td></tr>
 
   <tr><th>Course:</th><td>
-    <select name="course_code" required>
+    <select name="course_code" class="select2" required>
       <option value="">-- Select Course --</option>
       <?php foreach ($courses as $c): ?>
         <option value="<?= htmlspecialchars($c['course_code']) ?>">
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </td></tr>
 
   <tr><th>Module Leader:</th><td>
-    <select name="module_leader_id">
+    <select name="module_leader_id" class="select2">
       <option value="">-- Optional --</option>
       <?php foreach ($staff as $s): ?>
         <option value="<?= htmlspecialchars($s['staff_id']) ?>">

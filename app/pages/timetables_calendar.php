@@ -18,7 +18,7 @@ $type = $_GET['type'] ?? '';
 <form method="get" action="/index.php" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
     <input type="hidden" name="page" value="timetables_calendar">
 
-    <select name="module_id">
+    <select name="module_id" class="select2">
         <option value="">All Modules</option>
         <?php foreach ($modules as $m): ?>
             <option value="<?= $m['module_id'] ?>" <?= $m['module_id'] == $module_id ? 'selected' : '' ?>>
@@ -27,7 +27,7 @@ $type = $_GET['type'] ?? '';
         <?php endforeach; ?>
     </select>
 
-    <select name="staff_id">
+    <select name="staff_id" class="select2">
         <option value="">All Staff</option>
         <?php foreach ($staff as $s): ?>
             <option value="<?= $s['staff_id'] ?>" <?= $s['staff_id'] == $staff_id ? 'selected' : '' ?>>
@@ -36,7 +36,7 @@ $type = $_GET['type'] ?? '';
         <?php endforeach; ?>
     </select>
 
-    <select name="group">
+    <select name="group" class="select2">
         <option value="">All Groups</option>
         <?php foreach ($groups as $g): ?>
             <option value="<?= $g['group_id'] ?>" <?= $g['group_id'] == $group ? 'selected' : '' ?>>
@@ -45,7 +45,7 @@ $type = $_GET['type'] ?? '';
         <?php endforeach; ?>
     </select>
 
-    <select name="type">
+    <select name="type" class="select2">
         <option value="">All Types</option>
         <?php foreach ($type_options as $t): ?>
             <option value="<?= $t ?>" <?= $t == $type ? 'selected' : '' ?>><?= $t ?></option>
