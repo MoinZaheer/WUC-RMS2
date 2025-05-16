@@ -1,6 +1,8 @@
 Instructions to Run the RMS:
 
 Please make sure PHP is installed before running the RMS
+Watch this 1 minute video to Download and Set up Php on your computer
+https://www.youtube.com/watch?v=n04w2SzGr_U
 
 Download and extract the the Zip file
 
@@ -8,7 +10,8 @@ Open the the WUC RMS folder in file explorer
 Open the Public Folder
 Right Click and Open Terminal (while in the public folder)
 Run the Command: php -S localhost:8000
-In the web-browser Search for localhost:8000
+In the web-browser Search for http://localhost:8000
+
 
 Admin Login Details:
 Username: 3041
