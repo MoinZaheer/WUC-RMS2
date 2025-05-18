@@ -5,11 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Handle filters
+// filters
 $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';
 
-// Handle selected columns
+// selected columns
 if (isset($_GET['columns'])) {
     $selected_columns = $_GET['columns'];
     $_SESSION['staff_selected_columns'] = $selected_columns;
@@ -31,7 +31,7 @@ $available_columns = [
     'record_status' => 'Record Status'
 ];
 
-// Base SQL
+// sql
 $sql = "SELECT staff_id, first_name, middle_name, surname, email, phone, street, town, city, postcode, roles, specialist_subjects, record_status FROM Staff WHERE 1=1";
 
 $params = [];
@@ -66,7 +66,7 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
-// Execute query
+// exec query
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -86,7 +86,7 @@ try {
 <?php endif; ?>
 
 
-<!-- Search & Filters -->
+<!-- search n Filters -->
 <form method="get" action="/index.php" class="search-form">
   <input type="hidden" name="page" value="staff_search">
 
@@ -101,7 +101,7 @@ try {
 
   <button type="submit">Search</button>
 
-  <!-- Customise Columns Dropdown -->
+  <!-- customise columns dropdown -->
   <div class="columns-dropdown-container" >
     <button type="button" onclick="toggleColumnsDropdown()">Customise Columns ⬇</button>
 
@@ -121,7 +121,7 @@ try {
   </div>
 </form>
 
-<!-- Staff Table -->
+<!-- table -->
 <?php if (!empty($staff)): ?>
   <table class="search-table">
     <thead>

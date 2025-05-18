@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Filters
+// filters
 $module_id = $_GET['module_id'] ?? '';
 $assignment_id = $_GET['assignment_id'] ?? '';
 $student_id = $_GET['student_id'] ?? '';
@@ -30,7 +30,7 @@ if (!empty($student_id)) {
 
 $where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
-// Query grades
+
 $sql = "
     SELECT g.*, s.first_name, s.surname,
            a.title AS assignment_title, a.type AS assignment_type, a.due_date,
@@ -46,7 +46,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $grades = $stmt->fetchAll();
 
-// Dropdown data
+// dropdown data
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 
 $assignments = [];
@@ -59,7 +59,7 @@ if (!empty($module_id)) {
 
 <h2>View Grades</h2>
 
-<!-- Filters -->
+<!-- filters -->
 <form method="get" action="/index.php" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
     <input type="hidden" name="page" value="grades">
 
@@ -86,7 +86,7 @@ if (!empty($module_id)) {
     <button type="submit" class="button-primary">Filter</button>
 </form>
 
-<!-- Grades Table -->
+<!-- grades Table -->
 <?php if (!empty($grades)): ?>
     <table>
         <thead>

@@ -21,7 +21,7 @@ if (isset($_GET['columns'])) {
     $selected_columns = ['student_id', 'name', 'email', 'phone', 'record_status', 'course_code', 'tutor_name']; // default
 }
 
-// Available columns
+// available columns
 $available_columns = [
     'student_id' => 'Student ID',
     'name' => 'Name',
@@ -34,7 +34,7 @@ $available_columns = [
     'non_term_address' => 'Non-Term Address'
 ];
 
-// Base query
+// sql query
 $sql = "SELECT s.student_id, s.first_name, s.middle_name, s.surname, s.email, s.phone,
                s.term_street, s.term_town, s.term_city, s.term_postcode,
                s.non_term_street, s.non_term_town, s.non_term_city, s.non_term_postcode,
@@ -85,7 +85,7 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
-// Execute
+// execute sql
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -95,7 +95,7 @@ try {
     exit;
 }
 
-// Dropdown options
+// dropdown options
 $courses = $pdo->query("SELECT course_code FROM Courses")->fetchAll();
 $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchAll();
 ?>
@@ -140,7 +140,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
 
   <button type="submit">Search</button>
 
-  <!-- Customise Columns Button -->
+  <!-- customise columns button -->
   <div class="columns-dropdown-container" >
     <button type="button" onclick="toggleColumnsDropdown()">Customise Columns ⬇</button>
     <div id="columnsDropdown" class="columns-dropdown" >
@@ -217,7 +217,7 @@ $tutors = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchA
   <p>No students found.</p>
 <?php endif; ?>
 
-<!-- JS to handle dropdown -->
+<!-- JS to handle dropdown, put in one js file later -->
 <script>
 function toggleColumnsDropdown() {
     var dropdown = document.getElementById('columnsDropdown');

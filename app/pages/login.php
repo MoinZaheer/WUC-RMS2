@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $user_id = $_POST['user_id'] ?? '';

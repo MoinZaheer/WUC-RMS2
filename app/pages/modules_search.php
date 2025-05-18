@@ -5,12 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Handle filters
+//filters
 $search = $_GET['search'] ?? '';
 $level = $_GET['level'] ?? '';
 $course = $_GET['course'] ?? '';
 
-// Reset columns if broken
+// reset columns to default if no columns are selected
 $default_columns = ['module_code', 'module_title', 'level', 'credits', 'course_code', 'module_leader'];
 
 if (isset($_GET['columns'])) {
@@ -18,12 +18,12 @@ if (isset($_GET['columns'])) {
 }
 $selected_columns = $_SESSION['modules_selected_columns'] ?? $default_columns;
 
-// Make sure Record Status is removed
+// make sure Record Status is removed
 $selected_columns = array_values(array_filter($selected_columns, function($col) use ($default_columns) {
     return in_array($col, $default_columns);
 }));
 
-// Available columns
+// available columns
 $available_columns = [
     'module_code' => 'Module Code',
     'module_title' => 'Title',
@@ -33,7 +33,7 @@ $available_columns = [
     'module_leader' => 'Module Leader'
 ];
 
-// Base SQL
+// SQL
 $sql = "SELECT m.*, 
                c.course_name,
                CONCAT(s.first_name, ' ', s.surname) AS module_leader
@@ -70,7 +70,6 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
-// Fetch Modules
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -109,7 +108,7 @@ $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll
 
     <button type="submit">Search</button>
 
-    <!-- Customize Columns -->
+    <!-- customize Columns -->
     <div class="columns-dropdown-container ">
         <button type="button" onclick="toggleColumnsDropdown()">Customize Columns ⬇</button>
 
@@ -170,6 +169,7 @@ $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll
   <p>No modules found.</p>
 <?php endif; ?>
 
+<!-- before submitting try putting all the js code in one file -->
 <script>
 function toggleColumnsDropdown() {
     const dropdown = document.getElementById('columnsDropdown');

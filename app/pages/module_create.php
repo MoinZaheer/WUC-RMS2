@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../includes/db.php';
 
-// Fetch dropdown options
+// for dropdown options
 $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
 $staff = $pdo->query("SELECT staff_id, first_name, middle_name, surname FROM Staff")->fetchAll();
 
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $module_code = trim($_POST['module_code']);
     $module_title = trim($_POST['module_title']);

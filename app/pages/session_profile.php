@@ -10,7 +10,7 @@ if (!$timetable_id) {
     exit;
 }
 
-// Handle DELETE
+// handle DELETE
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     if ($_POST['delete'] === 'recurring' && !empty($_POST['recurring_session_id'])) {
         $stmt = $pdo->prepare("DELETE FROM Timetables WHERE recurring_session_id = ?");
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     exit;
 }
 
-// Handle UPDATE
+// handle UPDATE
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
     $fields = ['module_id', 'staff_id', 'room_id', 'date', 'start_time', 'end_time', 'type', 'group_id'];
     $updateData = [];
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
     }
 }
 
-// Fetch session data
+// session data
 $stmt = $pdo->prepare("SELECT * FROM Timetables WHERE timetable_id = :id");
 $stmt->execute(['id' => $timetable_id]);
 $session = $stmt->fetch();

@@ -1,5 +1,6 @@
 <?php
 
+// connects to Google Cloud SQL instance
 $host = '35.242.176.106';
 $db   = 'wuc-db';
 $user = 'wuc-user';

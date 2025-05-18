@@ -12,7 +12,7 @@ if (!$student_id) {
     exit;
 }
 
-// Fetch student name
+// student details
 $stmt = $pdo->prepare("SELECT first_name, surname FROM Students WHERE student_id = :student_id");
 $stmt->execute(['student_id' => $student_id]);
 $student = $stmt->fetch();
@@ -22,7 +22,7 @@ if (!$student) {
     exit;
 }
 
-// Fetch meetings
+// meetings
 $stmt = $pdo->prepare("
     SELECT tm.*, 
            st.first_name AS tutor_first, st.surname AS tutor_last,

@@ -4,10 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Fetch courses for dropdown
+// courses for dropdown
 $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
 
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = trim($_POST['student_id']);
     $first_name = trim($_POST['first_name']);

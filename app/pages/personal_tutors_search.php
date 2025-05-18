@@ -74,7 +74,6 @@ if (!empty($conditions)) {
     $sql .= " AND " . implode(' AND ', $conditions);
 }
 
-// main query
 try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -84,7 +83,7 @@ try {
     exit;
 }
 
-// Tutor load summary
+// get tutor summary
 $tutor_loads = $pdo->query("
     SELECT st.staff_id, st.first_name, st.surname, COUNT(pt.student_id) AS tutee_count
     FROM PersonalTutors pt
@@ -128,7 +127,7 @@ $tutor_loads = $pdo->query("
     <button type="submit" class="button-primary">Search</button>
 </form>
 
-<!-- tutor Load Summary -->
+<!-- tutor summary -->
 <details style="margin-top: 1rem;">
     <summary><strong>Tutor Load Summary (Click to Expand)</strong></summary>
     <ul style="margin-top: 0.5rem;">

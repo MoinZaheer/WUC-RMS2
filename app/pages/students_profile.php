@@ -9,7 +9,7 @@ if (!$student_id) {
     exit;
 }
 
-// Handle form POST (Save/Save & Exit)
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = [
         'first_name', 'middle_name', 'surname', 'email', 'phone',
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute($updateData);
     }
 
-    // Redirect accordingly
+    // redirect accordingly
     if (isset($_POST['save_exit'])) {
         header("Location: /index.php?page=students_search&message=Student updated successfully");
         exit();
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch student data after any potential update
+// get student data after any potential update
 $stmt = $pdo->prepare("SELECT * FROM Students WHERE student_id = :id");
 $stmt->execute(['id' => $student_id]);
 $student = $stmt->fetch();
@@ -55,7 +55,7 @@ if (!$student) {
     exit;
 }
 
-// Fetch personal tutor
+// personal tutor
 $tutorStmt = $pdo->prepare("
   SELECT st.first_name, st.middle_name, st.surname
   FROM PersonalTutors pt
@@ -68,7 +68,7 @@ $tutor = $tutorStmt->fetch();
 
 <h2>Student Profile</h2>
 
-<!-- Message if successfull or not -->
+<!-- message if successfull or not -->
 <?php if (isset($_GET['message'])): ?>
   <div class="toast">
     <?= htmlspecialchars($_GET['message']) ?>

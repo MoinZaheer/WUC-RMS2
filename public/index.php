@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// DB connection
+// db connection
 require_once __DIR__ . '/../app/includes/db.php';
 
 if (isset($_GET['page']) && $_GET['page'] === 'timetable_events') {

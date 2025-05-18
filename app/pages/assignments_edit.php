@@ -11,7 +11,7 @@ if (!$assignment_id) {
     exit;
 }
 
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = ['title', 'type', 'weight', 'due_date', 'module_id'];
     $updateData = [];
@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch assignment
 $stmt = $pdo->prepare("SELECT * FROM Assignments WHERE assignment_id = :id");
 $stmt->execute(['id' => $assignment_id]);
 $assignment = $stmt->fetch();
@@ -51,13 +50,13 @@ if (!$assignment) {
     exit;
 }
 
-// Modules dropdown
+// modules dropdown
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 ?>
 
 <h2>Edit Assignment</h2>
 
-<!-- Toast / Confirmation Message -->
+<!-- Toast  -->
 <?php if (isset($_GET['message'])): ?>
   <div class="toast">
     <?= htmlspecialchars($_GET['message']) ?>

@@ -1,4 +1,5 @@
 <?php
+// for testing ONLY
 $enteredPassword = 'test123'; // the password to check
 $storedHash = '$2y$10$HoRC9NQmXHOSroZrLvmczeGvt9NRM8ydYb3kTi9bDO6ItGnp43TyK'; // stored in db
 

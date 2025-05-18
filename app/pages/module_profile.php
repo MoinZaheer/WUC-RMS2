@@ -9,7 +9,7 @@ if (!$module_id) {
     exit;
 }
 
-// Handle form POST (Save/Save & Exit)
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = ['module_code', 'module_title', 'level', 'credits', 'course_code', 'module_leader_id'];
     $updateData = [];
@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch module data
 $stmt = $pdo->prepare("
     SELECT m.*, 
            c.course_name,
@@ -57,7 +56,7 @@ if (!$module) {
     exit;
 }
 
-// Fetch dropdown options
+//  dropdown options
 $courses = $pdo->query("SELECT course_code, course_name FROM Courses")->fetchAll();
 $staff = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchAll();
 ?>
@@ -65,6 +64,8 @@ $staff = $pdo->query("SELECT staff_id, first_name, surname FROM Staff")->fetchAl
 <h2>Module Profile</h2>
 
 <!-- Toast message -->
+
+<!-- see if toast message can be unified in layout.php later -->
 <?php if (isset($_GET['message'])): ?>
   <div class="toast">
     <?= htmlspecialchars($_GET['message']) ?>

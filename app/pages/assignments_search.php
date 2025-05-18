@@ -13,7 +13,7 @@ if (!empty($_SESSION['toast'])): ?>
 endif;
   
 
-// Filters
+// filters, for searchh
 $module_id = $_GET['module_id'] ?? '';
 $type = $_GET['type'] ?? '';
 $start_date = $_GET['start_date'] ?? '';
@@ -41,7 +41,6 @@ if (!empty($end_date)) {
 
 $where_sql = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 
-// Query assignments
 $sql = "
     SELECT a.assignment_id, a.title, a.type, a.weight, a.due_date,
            m.module_code, m.module_title
@@ -54,13 +53,12 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $assignments = $stmt->fetchAll();
 
-// Get modules for dropdown
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 ?>
 
 <h2>Search Assignments</h2>
 
-<!-- Filters -->
+<!-- filters -->
 <form method="get" action="/index.php" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
     <input type="hidden" name="page" value="assignments_search">
 

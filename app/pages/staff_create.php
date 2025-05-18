@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Handle form submission
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $staff_id = trim($_POST['staff_id']);
     $first_name = trim($_POST['first_name']);

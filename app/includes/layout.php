@@ -13,7 +13,7 @@ $pageTitle = $pageTitle ?? ucfirst(str_replace('_', ' ', $_GET['page'] ?? 'Dashb
   <link rel="stylesheet" href="/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Select2 -->
+    <!-- sselect2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -25,7 +25,7 @@ $pageTitle = $pageTitle ?? ucfirst(str_replace('_', ' ', $_GET['page'] ?? 'Dashb
 <body>
 <div class="layout">
 
-  <!-- Sidebar -->
+  <!-- sidebar -->
   <aside class="sidebar">
     <div class="logo">
       <img src="/images/Logo.jpg" alt="WUC Logo" />
@@ -33,7 +33,7 @@ $pageTitle = $pageTitle ?? ucfirst(str_replace('_', ' ', $_GET['page'] ?? 'Dashb
     <?php require_once __DIR__ . '/nav.php'; ?>
   </aside>
 
-  <!-- Topbar + Content -->
+  <!-- topbar + Content -->
   <div class="main-wrapper">
     <header class="topbar">
       <div class="topbar-left">

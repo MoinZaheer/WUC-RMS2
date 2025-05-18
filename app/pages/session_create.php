@@ -197,6 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <a href="/index.php?page=timetables_calendar" class="button-cancel">Cancel</a>
 </form>
 
+
+<!-- for recurring sessions, see if it can be put in a unified js file -->
 <script>
 function toggleRepeat() {
   const isChecked = document.getElementById('is_recurring').checked;

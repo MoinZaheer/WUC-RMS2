@@ -9,7 +9,7 @@ if (!$staff_id) {
     exit;
 }
 
-// Handle form POST (Save/Save & Exit)
+// form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = [
         'first_name', 'middle_name', 'surname', 'email', 'phone',
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute($updateData);
     }
 
-    // Redirect accordingly
+    // redirect accordingly
     if (isset($_POST['save_exit'])) {
         header("Location: /index.php?page=staff_search&message=Staff updated successfully");
         exit();
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch staff data
+// get staff data
 $stmt = $pdo->prepare("SELECT * FROM Staff WHERE staff_id = :id");
 $stmt->execute(['id' => $staff_id]);
 $staff = $stmt->fetch();
@@ -57,7 +57,7 @@ if (!$staff) {
 
 <h2>Staff Profile</h2>
 
-<!-- Success Message -->
+<!-- success Message -->
 <?php if (isset($_GET['message'])): ?>
   <div class="toast">
     <?= htmlspecialchars($_GET['message']) ?>

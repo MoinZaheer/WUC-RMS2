@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Handle submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $type = $_POST['type'] ?? '';
@@ -36,13 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get modules for dropdown
+// modules for dropdown
 $modules = $pdo->query("SELECT module_id, module_code, module_title FROM Modules ORDER BY module_code")->fetchAll();
 ?>
 
 <h2>Create New Assessment</h2>
 
 <!-- Toast -->
+ <!-- see if toast message can be unified in layout.php later -->
 <?php if (!empty($_SESSION['toast'])): ?>
   <div class="toast"><?= htmlspecialchars($_SESSION['toast']) ?></div>
   <?php unset($_SESSION['toast']); ?>
